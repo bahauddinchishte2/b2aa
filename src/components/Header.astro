@@ -1,0 +1,697 @@
+---
+const navigation = {
+  scholarships: [
+    { name: 'All Scholarships', href: '/scholarships/all' },
+    { name: 'Currently Open Scholarships', href: '/scholarships/current' },
+    { name: 'Government Scholarships', href: '/scholarships/government' },
+    { name: 'University Scholarships', href: '/scholarships/university' },
+  ],
+  opportunities: [
+    { name: 'All Opportunities', href: '/opportunities/all' },
+    { name: 'Currently Open Opportunities', href: '/opportunities/current' },
+    { name: 'Internships', href: '/opportunities/internships' },
+    { name: 'Fellowships', href: '/opportunities/fellowships' },
+  ],
+  resources: [
+    { name: 'Country Guides', href: '/resources/country-guides' },
+    { name: 'Test Preparation', href: '/resources/test-prep' },
+    { name: 'Blog', href: '/blog' }
+  ],
+};
+---
+
+<header class="bg-white shadow-sm relative z-50">
+  <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
+    <div class="flex flex-col items-center py-4 md:relative">
+      <!-- Logo centered -->
+      <div id="desktop-logo" class="flex justify-center items-center w-full md:relative fixed top-0 left-0 right-0 bg-white z-50 py-2 shadow-sm md:py-0 md:shadow-none transition-transform duration-300">
+        <a href="/" class="flex items-center gap-2 text-2xl font-bold text-primary-600">
+          <svg width="32" height="32" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M250 450C360.457 450 450 360.457 450 250C450 139.543 360.457 50 250 50C139.543 50 50 139.543 50 250C50 360.457 139.543 450 250 450Z" fill="#006A4E"/>
+            <path d="M242.857 142.857C297.286 142.857 342.857 188.429 342.857 242.857C342.857 297.286 297.286 342.857 242.857 342.857C188.429 342.857 142.857 297.286 142.857 242.857C142.857 188.429 188.429 142.857 242.857 142.857Z" fill="#F42A41"/>
+          </svg>
+          <span class="font-poppins text-xl md:text-3xl">Bangladesh to Abroad</span>
+        </a>
+      </div>
+      
+      <!-- Navigation Menu - Desktop - Hidden on mobile -->
+      <div id="desktop-menu" class="hidden md:flex items-center justify-center space-x-2 md:space-x-4 lg:space-x-8 w-full mt-4 transition-all duration-300">
+        <div class="relative group">
+          <button class="flex items-center text-gray-700 hover:text-primary-600 px-2 md:px-3 py-2 whitespace-nowrap">
+            Scholarships
+            <svg class="ml-1 md:ml-2 h-4 w-4 md:h-5 md:w-5 text-primary-300 group-hover:text-primary-600 transition-colors" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-1" role="menu" aria-orientation="vertical">
+              {navigation.scholarships.map((item) => (
+                <a
+                  href={item.href}
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                  role="menuitem"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="relative group">
+          <button class="flex items-center text-gray-700 hover:text-primary-600 px-2 md:px-3 py-2 whitespace-nowrap">
+            Opportunities
+            <svg class="ml-1 md:ml-2 h-4 w-4 md:h-5 md:w-5 text-primary-300 group-hover:text-primary-600 transition-colors" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-1" role="menu" aria-orientation="vertical">
+              {navigation.opportunities.map((item) => (
+                <a
+                  href={item.href}
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                  role="menuitem"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mx-4">
+          <input
+            type="search"
+            id="desktop-search-input"
+            placeholder="Search opportunities..."
+            class="w-64 px-4 py-2 pl-10 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-200/50 focus:border-primary-300 transition-all duration-200"
+          />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <div id="desktop-search-results" class="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-primary-100 divide-y divide-gray-100 max-h-96 overflow-y-auto hidden z-50"></div>
+        </div>
+
+        <div class="relative group">
+          <a href="/resources" class="flex items-center text-gray-700 hover:text-primary-600 px-2 md:px-3 py-2 whitespace-nowrap">
+            Resources
+            <svg class="ml-1 md:ml-2 h-4 w-4 md:h-5 md:w-5 text-primary-300 group-hover:text-primary-600 transition-colors" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-1" role="menu" aria-orientation="vertical">
+              {navigation.resources.map((item) => (
+                <a
+                  href={item.href}
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                  role="menuitem"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Menu Items -->
+        <a href="/about" class="text-gray-700 hover:text-primary-600 px-2 md:px-3 py-2">
+          About Us
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile Bottom Navigation - Only visible on mobile -->
+<div id="mobile-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[100] shadow-lg pb-safe transition-transform duration-300">
+  <div class="grid grid-cols-5 px-2 py-3 gap-1">
+    <!-- Home -->
+    <a href="/" class="mobile-nav-item px-1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 text-gray-600 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+      <span class="text-[10px] mt-1">Home</span>
+    </a>
+
+    <!-- Scholarships dropdown -->
+    <div class="relative mobile-nav-dropdown">
+      <button class="mobile-nav-item px-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 text-gray-600 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998a12.078 12.078 0 01.665-6.479L12 14z" />
+        </svg>
+        <span class="text-[10px] mt-1">Scholarships</span>
+      </button>
+      <div class="mobile-dropdown-content hidden">
+        {navigation.scholarships.map(item => (
+          <a href={item.href} class="mobile-dropdown-item">
+            {item.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Search Button - Centered -->
+    <button id="mobile-search-btn" class="mobile-nav-item px-1">
+      <div class="h-10 w-10 bg-primary-600 rounded-full flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <span class="text-[10px] mt-1 text-primary-600 font-medium">Search</span>
+    </button>
+
+    <!-- Opportunities dropdown -->
+    <div class="relative mobile-nav-dropdown">
+      <button class="mobile-nav-item px-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 text-gray-600 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <span class="text-[10px] mt-1">Opportunities</span>
+      </button>
+      <div class="mobile-dropdown-content hidden">
+        {navigation.opportunities.map(item => (
+          <a href={item.href} class="mobile-dropdown-item">
+            {item.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="relative mobile-nav-dropdown">
+      <button class="mobile-nav-item px-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 text-gray-600 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span class="text-[10px] mt-1">Resources</span>
+      </button>
+      <div class="mobile-dropdown-content hidden">
+        {navigation.resources.map(item => (
+          <a href={item.href} class="mobile-dropdown-item">
+            {item.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Menu Backdrop -->
+<div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/50 z-[90] hidden md:hidden"></div>
+
+<!-- Bottom padding for mobile -->
+<div class="md:hidden h-16 w-full hidden"></div>
+
+<!-- Mobile Search Modal -->
+<div id="mobile-search-modal" class="fixed inset-0 bg-black/50 z-[110] hidden md:hidden">
+  <div class="fixed top-0 left-0 right-0 bg-white rounded-b-2xl p-4 transform transition-transform duration-300 shadow-lg" style="transform: translateY(-100%)">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold">Search</h3>
+      <button id="close-search-modal" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="relative">
+      <input
+        type="search"
+        id="mobile-search-input"
+        placeholder="Search for opportunities..."
+        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-300 transition-all duration-200"
+      />
+    </div>
+    <div id="mobile-search-results" class="mt-4 max-h-[70vh] overflow-y-auto divide-y divide-gray-100"></div>
+  </div>
+</div>
+
+<style>
+  /* Mobile navigation styles */
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    color: #4b5563;
+    transition: all 0.2s;
+  }
+  
+  .mobile-nav-item:hover, 
+  .mobile-nav-item:focus {
+    @apply text-primary-600;
+  }
+  
+  .mobile-nav-dropdown {
+    position: relative;
+  }
+  
+  .mobile-dropdown-content {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    max-width: 20rem;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    z-index: 110;
+    border: 1px solid rgba(229, 231, 235, 1);
+  }
+  
+  .mobile-dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #4b5563;
+    font-size: 0.875rem;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  
+  .mobile-dropdown-item:hover,
+  .mobile-dropdown-item:focus {
+    @apply bg-primary-50;
+    @apply text-primary-600;
+  }
+  
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+  }
+  
+  /* For iPhone X and newer with notches */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+  }
+  
+  /* Remove default focus styles and add custom ones */
+  input[type="search"]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(0, 106, 78, 0.2);
+    border-color: #059669;
+  }
+  
+  /* Remove browser's default search input styling */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+</style>
+
+<script>
+  // Mobile navigation functionality with small bundle size
+  document.addEventListener('DOMContentLoaded', () => {
+    // Simple DOM queries with low memory impact
+    const mobileNav = document.getElementById('mobile-nav');
+    const mobileDropdowns = document.querySelectorAll('.mobile-nav-dropdown');
+    const paddingDiv = document.querySelector('.md\\:hidden.h-16');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
+    const searchBtn = document.getElementById('mobile-search-btn');
+    const searchModal = document.getElementById('mobile-search-modal');
+    const modalContent = searchModal?.querySelector('.fixed');
+    const closeSearchBtn = document.getElementById('close-search-modal');
+    
+    // Store state to minimize DOM operations
+    let activeDropdown = null;
+    
+    // Close active dropdown function - reused
+    function closeActiveDropdown() {
+      if (activeDropdown) {
+        activeDropdown.style.display = 'none';
+      }
+      activeDropdown = null;
+      if (backdrop) backdrop.style.display = 'none';
+      if (paddingDiv) paddingDiv.style.display = 'none';
+    }
+    
+    // Set up dropdown buttons
+    mobileDropdowns.forEach(dropdown => {
+      const button = dropdown.querySelector('button');
+      const content = dropdown.querySelector('.mobile-dropdown-content');
+      
+      if (button && content) {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Close any other open dropdown
+          if (activeDropdown && activeDropdown !== content) {
+            activeDropdown.style.display = 'none';
+          }
+          
+          // Toggle this dropdown
+          const isOpen = content.style.display === 'block';
+          content.style.display = isOpen ? 'none' : 'block';
+          activeDropdown = isOpen ? null : content;
+          
+          // Update backdrop
+          if (backdrop) backdrop.style.display = isOpen ? 'none' : 'block';
+          if (paddingDiv) paddingDiv.style.display = isOpen ? 'none' : 'block';
+        });
+      }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target?.closest('.mobile-nav-dropdown')) {
+        closeActiveDropdown();
+      }
+    });
+    
+    // Mobile search functionality
+    if (searchBtn && searchModal && modalContent && closeSearchBtn) {
+      searchBtn.addEventListener('click', () => {
+        searchModal.classList.remove('hidden');
+        // Small delay to ensure modal is in DOM
+        setTimeout(() => {
+          modalContent.style.transform = 'translateY(0)';
+          document.getElementById('mobile-search-input')?.focus();
+        }, 10);
+      });
+      
+      // Close search modal function
+      function closeSearchModal() {
+        modalContent.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+          searchModal.classList.add('hidden');
+          const searchInput = document.getElementById('mobile-search-input');
+          if (searchInput) searchInput.value = '';
+        }, 300);
+      }
+      
+      closeSearchBtn.addEventListener('click', closeSearchModal);
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) closeSearchModal();
+      });
+    }
+
+    // Add scroll-aware functionality for mobile navigation
+    if (mobileNav) {
+      let lastScrollTop = 0;
+      let scrollDirection = 'up';
+      const scrollThreshold = 10; // Minimum scroll amount to trigger hide/show
+
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        
+        // Determine scroll direction with threshold to avoid small movements
+        if (currentScroll > lastScrollTop + scrollThreshold) {
+          // Scrolling down
+          if (scrollDirection !== 'down') {
+            scrollDirection = 'down';
+            mobileNav.style.transform = 'translateY(100%)';
+          }
+        } else if (currentScroll < lastScrollTop - scrollThreshold) {
+          // Scrolling up
+          if (scrollDirection !== 'up') {
+            scrollDirection = 'up';
+            mobileNav.style.transform = 'translateY(0)';
+          }
+        }
+        
+        // Update last scroll position, but only when exceeding threshold
+        if (Math.abs(currentScroll - lastScrollTop) > scrollThreshold) {
+          lastScrollTop = currentScroll;
+        }
+      }, { passive: true });
+
+      // Make sure to show the nav when at the top of the page
+      window.addEventListener('scroll', () => {
+        if (window.scrollY === 0) {
+          mobileNav.style.transform = 'translateY(0)';
+        }
+      }, { passive: true });
+
+      // Show the nav when user reaches bottom of page
+      window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
+          mobileNav.style.transform = 'translateY(0)';
+        }
+      }, { passive: true });
+    }
+    
+    // Desktop search functionality
+    const desktopSearchInput = document.getElementById('desktop-search-input');
+    const desktopSearchResults = document.getElementById('desktop-search-results');
+    
+    if (desktopSearchInput && desktopSearchResults) {
+      // Import fuse.js for search
+      import('fuse.js').then(module => {
+        const Fuse = module.default;
+        
+        // Get search data
+        const searchData = window.SEARCH_DATA || [];
+        
+        if (searchData.length === 0) {
+          console.warn('No search data available for desktop search');
+          return;
+        }
+        
+        // Initialize Fuse
+        const fuse = new Fuse(searchData, {
+          keys: ['title', 'country', 'fundingType', 'levelOfStudy', 'tags', 'description', 'excerpt'],
+          threshold: 0.4,
+          includeScore: true
+        });
+        
+        // Handle search input
+        desktopSearchInput.addEventListener('input', (e) => {
+          const query = e.target.value.trim();
+          
+          if (!query) {
+            desktopSearchResults.classList.add('hidden');
+            return;
+          }
+          
+          // Perform search
+          const results = fuse.search(query);
+          
+          if (results.length > 0) {
+            desktopSearchResults.classList.remove('hidden');
+            
+            // Map results to HTML
+            const resultsHtml = results
+              .slice(0, 5)
+              .map(({ item, score }) => {
+                // Determine URL based on content type
+                let url = '';
+                let categoryLabel = '';
+                let categoryClass = '';
+                
+                switch(item.type) {
+                  case 'scholarship':
+                    url = `/scholarships/${item.slug}`;
+                    categoryLabel = 'Scholarship';
+                    categoryClass = 'bg-green-100 text-green-800';
+                    break;
+                  case 'opportunity':
+                    url = `/opportunities/${item.slug}`;
+                    categoryLabel = item.category.includes('internship') ? 'Internship' : 'Fellowship';
+                    categoryClass = 'bg-orange-100 text-orange-800';
+                    break;
+                  case 'resource':
+                    url = `/resources/${item.slug}`;
+                    categoryLabel = 'Resource';
+                    categoryClass = 'bg-blue-100 text-blue-800';
+                    break;
+                  case 'blog':
+                    url = `/blog/${item.slug}`;
+                    categoryLabel = 'Blog';
+                    categoryClass = 'bg-purple-100 text-purple-800';
+                    break;
+                  default:
+                    url = `/search?q=${encodeURIComponent(query)}`;
+                }
+                
+                // Create relevance class
+                const relevanceClass = score < 0.2 ? 'bg-green-50' : 
+                                      score < 0.4 ? 'bg-white' : 'bg-gray-50';
+                
+                return `
+                  <a 
+                    href="${url}" 
+                    class="block p-3 hover:bg-gray-50 transition-colors ${relevanceClass}"
+                  >
+                    <div class="flex justify-between items-start">
+                      <div class="font-medium text-sm text-gray-900">${item.title}</div>
+                      <span class="text-xs px-2 py-1 rounded-full ${categoryClass}">${categoryLabel}</span>
+                    </div>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                      ${item.country ? `<span>${item.country}</span>` : ''}
+                      ${item.levelOfStudy ? `<span>${item.levelOfStudy}</span>` : ''}
+                    </div>
+                  </a>
+                `;
+              })
+              .join('');
+            
+            // Add "See all results" link
+            const seeAllLink = `
+              <a href="/search?q=${encodeURIComponent(query)}" class="block p-2 text-center text-primary-600 text-sm hover:bg-gray-50 font-medium">
+                See all results
+              </a>
+            `;
+            
+            desktopSearchResults.innerHTML = resultsHtml + seeAllLink;
+          } else {
+            // No results found
+            desktopSearchResults.classList.remove('hidden');
+            desktopSearchResults.innerHTML = `
+              <div class="p-3 text-gray-500 text-center text-sm">
+                No results found for "${query}"
+              </div>
+            `;
+          }
+        });
+        
+        // Handle keyboard navigation
+        desktopSearchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            // Redirect to search page on Enter
+            const query = desktopSearchInput.value.trim();
+            if (query) {
+              window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            }
+          } else if (e.key === 'Escape') {
+            // Hide results on Escape
+            desktopSearchResults.classList.add('hidden');
+          }
+        });
+        
+        // Close results when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!desktopSearchInput.contains(e.target) && !desktopSearchResults.contains(e.target)) {
+            desktopSearchResults.classList.add('hidden');
+          }
+        });
+      }).catch(err => {
+        console.error('Error loading Fuse.js:', err);
+      });
+    }
+    
+    // Mobile search results functionality
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    const mobileSearchResults = document.getElementById('mobile-search-results');
+    
+    if (mobileSearchInput && mobileSearchResults) {
+      // Import fuse.js for search
+      import('fuse.js').then(module => {
+        const Fuse = module.default;
+        
+        // Get search data
+        const searchData = window.SEARCH_DATA || [];
+        
+        if (searchData.length === 0) {
+          console.warn('No search data available for mobile search');
+          return;
+        }
+        
+        // Initialize Fuse
+        const fuse = new Fuse(searchData, {
+          keys: ['title', 'country', 'fundingType', 'levelOfStudy', 'tags', 'description', 'excerpt'],
+          threshold: 0.4,
+          includeScore: true
+        });
+        
+        // Handle search input
+        mobileSearchInput.addEventListener('input', (e) => {
+          const query = e.target.value.trim();
+          
+          if (!query) {
+            mobileSearchResults.innerHTML = '';
+            return;
+          }
+          
+          // Perform search
+          const results = fuse.search(query);
+          
+          if (results.length > 0) {
+            // Map results to HTML
+            const resultsHtml = results
+              .slice(0, 8)
+              .map(({ item }) => {
+                // Determine URL based on content type
+                let url = '';
+                let categoryLabel = '';
+                
+                switch(item.type) {
+                  case 'scholarship':
+                    url = `/scholarships/${item.slug}`;
+                    categoryLabel = 'Scholarship';
+                    break;
+                  case 'opportunity':
+                    url = `/opportunities/${item.slug}`;
+                    categoryLabel = item.category.includes('internship') ? 'Internship' : 'Fellowship';
+                    break;
+                  case 'resource':
+                    url = `/resources/${item.slug}`;
+                    categoryLabel = 'Resource';
+                    break;
+                  case 'blog':
+                    url = `/blog/${item.slug}`;
+                    categoryLabel = 'Blog';
+                    break;
+                  default:
+                    url = `/search?q=${encodeURIComponent(query)}`;
+                }
+                
+                return `
+                  <a href="${url}" class="block p-3 hover:bg-gray-50">
+                    <div class="font-medium text-gray-900">${item.title}</div>
+                    <div class="flex justify-between mt-1">
+                      <span class="text-xs text-gray-500">${categoryLabel}</span>
+                      ${item.country ? `<span class="text-xs text-gray-500">${item.country}</span>` : ''}
+                    </div>
+                  </a>
+                `;
+              })
+              .join('');
+            
+            // Add "See all results" link
+            const seeAllLink = `
+              <a href="/search?q=${encodeURIComponent(query)}" class="block p-3 text-center text-primary-600 font-medium border-t">
+                See all results
+              </a>
+            `;
+            
+            mobileSearchResults.innerHTML = resultsHtml + seeAllLink;
+          } else {
+            // No results found
+            mobileSearchResults.innerHTML = `
+              <div class="p-4 text-gray-500 text-center">
+                No results found for "${query}"
+              </div>
+            `;
+          }
+        });
+        
+        // Handle keyboard navigation
+        mobileSearchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            // Redirect to search page on Enter
+            const query = mobileSearchInput.value.trim();
+            if (query) {
+              window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            }
+          }
+        });
+      }).catch(err => {
+        console.error('Error loading Fuse.js:', err);
+      });
+    }
+  });
+</script>

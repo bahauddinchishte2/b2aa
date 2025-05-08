@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ResourceBlog from '../../layouts/ResourceBlog.astro';
+
+export async function getStaticPaths() {
+  const resources = await getCollection('resources');
+  return resources.map(resource => ({
+    params: { slug: resource.slug },
+    props: resource,
+  }));
+}
+
+const resource = Astro.props;
+const { Content } = await resource.render();
+---
+
+<ResourceBlog frontmatter={resource.data}>
+  <Content />
+</ResourceBlog>

@@ -1,0 +1,142 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+import TopSearchBar from '../../components/TopSearchBar.astro';
+import FilterSystem from '../../components/FilterSystem.astro';
+import OpportunityCard from '../../components/OpportunityCard.astro';
+
+// Get all opportunities from the opportunities collection
+const allOpportunities = await getCollection('opportunities');
+const today = new Date();
+
+// Filter opportunities that are currently open
+const opportunities = allOpportunities.filter(post => {
+  const isCurrentlyOpen = new Date(post.data.deadline) >= today;
+  return isCurrentlyOpen;
+});
+
+// Get unique values for filters
+const countries = [...new Set(allOpportunities.map(post => post.data.country))];
+const levels = [...new Set(allOpportunities.map(post => post.data.levelOfStudy))];
+const fundingTypes = [...new Set(allOpportunities.map(post => post.data.fundingType))];
+
+// Prepare opportunities data for search
+const opportunitiesData = opportunities.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  levelOfStudy: post.data.levelOfStudy,
+  fundingType: post.data.fundingType,
+  category: post.data.category,
+  tags: post.data.tags,
+  slug: post.slug
+}));
+---
+
+<Layout 
+  title="Currently Open Opportunities"
+  description="Browse all currently open internships, fellowships, and other professional opportunities for Bangladeshi students abroad."
+  keywords={["current opportunities", "internships", "fellowships", "open opportunities", "professional development"]}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Currently Open Opportunities</h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters -->
+      <aside class="lg:col-span-1 h-fit sticky top-24">
+        <div class="lg:hidden mb-4">
+          <button id="mobile-filters-toggle" class="w-full bg-white p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-200">
+            <span class="font-medium">Show Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+        
+        <div id="mobile-filters" class="hidden lg:block">
+          <FilterSystem 
+            filters={{
+              countries,
+              fundingTypes,
+              levels
+            }}
+          />
+        </div>
+      </aside>
+
+      <!-- Opportunities List -->
+      <div class="lg:col-span-3">
+        <!-- Search bar added inside content column -->
+        <div class="mb-6">
+          <TopSearchBar />
+        </div>
+        
+        {opportunities.length > 0 ? (
+          <div class="space-y-4 sm:space-y-6">
+            {opportunities.map(post => (
+              <div class="opportunity-card"
+                data-country={post.data.country}
+                data-level={post.data.levelOfStudy}
+                data-fundingType={post.data.fundingType}
+                data-tag={post.data.tags.join(',')}
+                data-deadline={post.data.deadline}
+                data-category={post.data.category}
+              >
+                <OpportunityCard 
+                  item={{
+                    title: post.data.title,
+                    slug: post.slug,
+                    hostInstitution: post.data.hostInstitution,
+                    country: post.data.country,
+                    fundingType: post.data.fundingType,
+                    deadline: post.data.deadline,
+                    category: post.data.category,
+                    openDate: post.data.openDate
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+            <p class="text-gray-600">No currently open opportunities available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ opportunitiesData }}>
+  // Make opportunities data available for search
+  window.OPPORTUNITIES_DATA = opportunitiesData;
+
+  // Mobile filters toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileFiltersToggle = document.getElementById('mobile-filters-toggle');
+    const mobileFilters = document.getElementById('mobile-filters');
+    
+    if (mobileFiltersToggle && mobileFilters) {
+      mobileFiltersToggle.addEventListener('click', function() {
+        mobileFilters.classList.toggle('hidden');
+        
+        // Update button text and icon
+        if (mobileFilters.classList.contains('hidden')) {
+          mobileFiltersToggle.innerHTML = `
+            <span class="font-medium">Show Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          `;
+        } else {
+          mobileFiltersToggle.innerHTML = `
+            <span class="font-medium">Hide Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
+          `;
+        }
+      });
+    }
+  });
+</script>

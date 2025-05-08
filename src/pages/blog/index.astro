@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all blog posts
+const blogPosts = await getCollection('blog');
+---
+
+<Layout title="Blog">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Blog</h1>
+    
+    {blogPosts.length > 0 ? (
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {blogPosts.map(post => (
+          <a href={`/blog/${post.slug}`} class="group">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              {post.data.featuredImage && (
+                <img 
+                  src={post.data.featuredImage} 
+                  alt={post.data.title}
+                  class="w-full h-48 object-cover"
+                />
+              )}
+              <div class="p-6">
+                <h2 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors mb-2">
+                  {post.data.title}
+                </h2>
+                <p class="text-gray-600 text-sm mb-4">{post.data.excerpt}</p>
+                <div class="flex justify-between items-center mt-4">
+                  <span class="text-gray-500 text-sm">
+                    {new Date(post.data.publishDate).toLocaleDateString()}
+                  </span>
+                  <span class="text-primary-600 font-medium text-sm">Read more →</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-16 bg-white rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">No blog posts yet</h3>
+        <p class="text-gray-600">
+          Check back soon for updates, success stories, and more information.
+        </p>
+      </div>
+    )}
+  </div>
+</Layout>

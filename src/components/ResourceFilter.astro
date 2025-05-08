@@ -1,0 +1,139 @@
+---
+interface Props {
+  category: string;
+}
+
+// Predefined filter options
+const EXAM_TYPES = [
+  'IELTS',
+  'TOEFL',
+  'GRE',
+  'GMAT',
+  'Digital SAT'
+];
+
+const COUNTRIES = [
+  'United States',
+  'United Kingdom',
+  'Germany',
+  'Finland',
+  'Sweden',
+  'Australia',
+  'Netherlands',
+  'Canada'
+];
+
+const { category } = Astro.props;
+---
+
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-gray-200">
+  <h2 class="text-lg sm:text-xl font-semibold mb-6">Filter Resources</h2>
+  
+  {category === 'test-prep' && (
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Exam Type</label>
+      <select
+        data-filter="area"
+        class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+      >
+        <option value="">All Exams</option>
+        {EXAM_TYPES.map(type => (
+          <option value={type.toLowerCase()}>{type}</option>
+        ))}
+      </select>
+    </div>
+  )}
+
+  {category === 'country-guides' && (
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+      <select
+        data-filter="area"
+        class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+      >
+        <option value="">All Countries</option>
+        {COUNTRIES.map(country => (
+          <option value={country.toLowerCase()}>{country}</option>
+        ))}
+      </select>
+    </div>
+  )}
+
+  <button
+    id="reset-filters"
+    class="w-full mt-4 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+  >
+    Reset Filters
+  </button>
+</div>
+
+<script>
+  function updateResults() {
+    const resources = document.querySelectorAll('.resource-card');
+    const filters = {};
+
+    // Collect active filters
+    document.querySelectorAll('select[data-filter]').forEach(select => {
+      const filterType = select.getAttribute('data-filter');
+      const value = select.value;
+      
+      if (filterType && value) {
+        filters[filterType] = value.toLowerCase();
+      }
+    });
+
+    // Apply filters
+    resources.forEach(card => {
+      let shouldShow = true;
+
+      // Check each filter
+      Object.entries(filters).forEach(([filterType, value]) => {
+        const cardValue = card.getAttribute(`data-${filterType}`)?.toLowerCase();
+        if (!cardValue || !cardValue.includes(value)) {
+          shouldShow = false;
+        }
+      });
+
+      card.style.display = shouldShow ? 'block' : 'none';
+    });
+
+    // Show "no results" message if all cards are hidden
+    const visibleCards = Array.from(resources).filter(card => card.style.display !== 'none');
+    const noResultsMessage = document.getElementById('no-results-message');
+    
+    if (noResultsMessage) {
+      if (visibleCards.length === 0) {
+        noResultsMessage.style.display = 'block';
+      } else {
+        noResultsMessage.style.display = 'none';
+      }
+    } else if (visibleCards.length === 0) {
+      // Create a new "no results" message if it doesn't exist
+      const messageDiv = document.createElement('div');
+      messageDiv.id = 'no-results-message';
+      messageDiv.className = 'bg-white p-6 rounded-lg shadow-md text-center border border-gray-200 mt-6';
+      messageDiv.innerHTML = '<p class="text-gray-600">No resources match your filters. Try adjusting your criteria.</p>';
+      
+      const contentArea = document.querySelector('.lg\\:col-span-3');
+      if (contentArea) {
+        contentArea.appendChild(messageDiv);
+      }
+    }
+  }
+
+  // Add event listeners to all filter selects
+  document.querySelectorAll('select[data-filter]').forEach(select => {
+    select.addEventListener('change', updateResults);
+  });
+
+  // Reset filters
+  document.getElementById('reset-filters')?.addEventListener('click', () => {
+    document.querySelectorAll('select[data-filter]').forEach(select => {
+      select.value = '';
+    });
+    updateResults();
+  });
+
+  // Initialize filters
+  updateResults();
+</script>

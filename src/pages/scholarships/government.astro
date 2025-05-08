@@ -1,0 +1,141 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+import TopSearchBar from '../../components/TopSearchBar.astro';
+import FilterSystem from '../../components/FilterSystem.astro';
+import OpportunityCard from '../../components/OpportunityCard.astro';
+
+// Get all scholarships from the scholarships collection
+const allScholarships = await getCollection('scholarships');
+const today = new Date();
+
+// Filter scholarships with government-scholarship category
+const scholarships = allScholarships.filter(post => 
+  post.data.category === 'government-scholarship'
+);
+
+// Get unique values for filters
+const countries = [...new Set(allScholarships.map(post => post.data.country))];
+const levels = [...new Set(allScholarships.map(post => post.data.levelOfStudy))];
+const fundingTypes = [...new Set(allScholarships.map(post => post.data.fundingType))];
+
+// Prepare scholarships data for search
+const scholarshipsData = scholarships.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  fundingType: post.data.fundingType,
+  levelOfStudy: post.data.levelOfStudy,
+  tags: post.data.tags,
+  slug: post.slug
+}));
+---
+
+<Layout 
+  title="Government Scholarships"
+  description="Browse government scholarships for Bangladeshi students to study abroad."
+  keywords={["government scholarships", "study abroad", "international scholarships", "funding opportunities"]}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Government Scholarships</h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters -->
+      <aside class="lg:col-span-1 h-fit sticky top-24">
+        <div class="lg:hidden mb-4">
+          <button id="mobile-filters-toggle" class="w-full bg-white p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-200">
+            <span class="font-medium">Show Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+        
+        <div id="mobile-filters" class="hidden lg:block">
+          <FilterSystem 
+            filters={{
+              countries,
+              fundingTypes,
+              levels
+            }}
+          />
+        </div>
+      </aside>
+
+      <!-- Scholarship List -->
+      <div class="lg:col-span-3">
+        <!-- Search bar added inside content column -->
+        <div class="mb-6">
+          <TopSearchBar />
+        </div>
+        
+        {scholarships.length > 0 ? (
+          <div class="space-y-4 sm:space-y-6">
+            {scholarships.map(post => (
+              <div class="opportunity-card"
+                data-country={post.data.country}
+                data-level={post.data.levelOfStudy}
+                data-fundingType={post.data.fundingType}
+                data-tag={post.data.tags.join(',')}
+                data-deadline={post.data.deadline}
+                data-category={post.data.category}
+                data-status={new Date(post.data.deadline) >= today ? 'open' : 'closed'}
+              >
+                <OpportunityCard 
+                  item={{
+                    title: post.data.title,
+                    slug: post.slug,
+                    hostInstitution: post.data.hostInstitution,
+                    country: post.data.country,
+                    fundingType: post.data.fundingType,
+                    deadline: post.data.deadline,
+                    category: post.data.category,
+                    openDate: post.data.openDate
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+            <p class="text-gray-600">No government scholarships available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ scholarshipsData }}>
+  // Make scholarships data available for search
+  window.OPPORTUNITIES_DATA = scholarshipsData;
+
+  // Mobile filters toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileFiltersToggle = document.getElementById('mobile-filters-toggle');
+    const mobileFilters = document.getElementById('mobile-filters');
+    
+    if (mobileFiltersToggle && mobileFilters) {
+      mobileFiltersToggle.addEventListener('click', function() {
+        mobileFilters.classList.toggle('hidden');
+        
+        // Update button text and icon
+        if (mobileFilters.classList.contains('hidden')) {
+          mobileFiltersToggle.innerHTML = `
+            <span class="font-medium">Show Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          `;
+        } else {
+          mobileFiltersToggle.innerHTML = `
+            <span class="font-medium">Hide Filters</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
+          `;
+        }
+      });
+    }
+  });
+</script>

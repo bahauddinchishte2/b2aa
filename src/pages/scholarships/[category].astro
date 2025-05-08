@@ -1,0 +1,122 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+import SearchBar from '../../components/SearchBar.astro';
+import FilterSystem from '../../components/FilterSystem.astro';
+import OpportunityCard from '../../components/OpportunityCard.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { category: 'current' } },
+    { params: { category: 'government' } },
+    { params: { category: 'university' } },
+  ];
+}
+
+const { category } = Astro.params;
+
+// Get all scholarships from the scholarships collection
+const allScholarships = await getCollection('scholarships');
+const today = new Date();
+
+// Filter scholarships based on category
+const scholarships = allScholarships.filter(post => {
+  const isCurrentlyOpen = 
+    new Date(post.data.openDate) <= today && 
+    new Date(post.data.deadline) >= today;
+
+  switch(category) {
+    case 'current':
+      return isCurrentlyOpen;
+    case 'government':
+      return post.data.category === 'government-scholarship';
+    case 'university':
+      return post.data.category === 'university-scholarship';
+    default:
+      return false;
+  }
+});
+
+// Get unique values for filters from ALL scholarships, not just the filtered ones
+const countries = [...new Set(allScholarships.map(post => post.data.country))];
+const levels = [...new Set(allScholarships.map(post => post.data.levelOfStudy))];
+const fundingTypes = [...new Set(allScholarships.map(post => post.data.fundingType))];
+const tags = [...new Set(allScholarships.flatMap(post => post.data.tags))];
+
+const categoryTitles = {
+  current: 'Currently Open Scholarships',
+  government: 'Government Scholarships',
+  university: 'University Scholarships',
+};
+
+// Prepare scholarships data for search
+const scholarshipsData = scholarships.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  fundingType: post.data.fundingType,
+  levelOfStudy: post.data.levelOfStudy,
+  tags: post.data.tags,
+  slug: post.slug
+}));
+---
+
+<Layout title={categoryTitles[category]}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">{categoryTitles[category]}</h1>
+    
+    <SearchBar />
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters -->
+      <aside class="lg:col-span-1 h-fit sticky top-24">
+        <FilterSystem 
+          filters={{
+            countries,
+            fundingTypes,
+            levels
+          }}
+        />
+      </aside>
+
+      <!-- Scholarship List -->
+      <div class="lg:col-span-3">
+        {scholarships.length > 0 ? (
+          <div class="space-y-6">
+            {scholarships.map(post => (
+              <div class="opportunity-card"
+                data-country={post.data.country}
+                data-level={post.data.levelOfStudy}
+                data-fundingType={post.data.fundingType}
+                data-tag={post.data.tags.join(',')}
+                data-deadline={post.data.deadline}
+              >
+                <OpportunityCard 
+                  item={{
+                    title: post.data.title,
+                    slug: post.slug,
+                    hostInstitution: post.data.hostInstitution,
+                    country: post.data.country,
+                    fundingType: post.data.fundingType,
+                    deadline: post.data.deadline,
+                    category: post.data.category,
+                    openDate: post.data.openDate
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <p class="text-gray-600">No {category} scholarships available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ scholarshipsData }}>
+  // Make scholarships data available for search
+  window.OPPORTUNITIES_DATA = scholarshipsData;
+</script>

@@ -1,0 +1,448 @@
+---
+import Layout from './Layout.astro';
+import { format } from 'date-fns';
+import ApplicationTimeline from '../components/ApplicationTimeline.astro';
+import AuthorCard from '../components/AuthorCard.tsx';
+import GiscusComments from '../components/GiscusComments.tsx';
+import SocialShare from '../components/SocialShare.astro';
+
+const { frontmatter } = Astro.props;
+
+const formattedOpenDate = format(new Date(frontmatter.openDate), 'MMMM d, yyyy');
+const formattedDeadline = format(new Date(frontmatter.deadline), 'MMMM d, yyyy');
+
+// Extract first paragraph for meta description if not provided
+let metaDescription = `Details about ${frontmatter.title} for ${frontmatter.levelOfStudy} students in ${frontmatter.country}. Application opens ${formattedOpenDate} and closes ${formattedDeadline}.`;
+
+// Create article schema keywords
+const keywords = [
+  frontmatter.title,
+  frontmatter.country,
+  frontmatter.levelOfStudy,
+  frontmatter.fundingType,
+  frontmatter.category.replace('-', ' '),
+  'scholarship',
+  'opportunity',
+  'study abroad',
+  'Bangladesh students',
+  ...frontmatter.tags
+];
+---
+
+<Layout 
+  title={frontmatter.title}
+  description={metaDescription}
+  type="scholarship"
+  contentType="scholarship"
+  publishDate={frontmatter.openDate}
+  author={frontmatter.author}
+  keywords={keywords}
+  scholarship={{
+    deadline: frontmatter.deadline,
+    fundingType: frontmatter.fundingType,
+    country: frontmatter.country,
+    levelOfStudy: frontmatter.levelOfStudy,
+    hostInstitution: frontmatter.hostInstitution,
+    category: frontmatter.category
+  }}
+>
+  <article class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+    <div class="mb-6 sm:mb-8 p-6 sm:p-8 bg-white rounded-xl shadow-lg border border-gray-400">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-gray-900">{frontmatter.title}</h1>
+    </div>
+
+    <!-- Status -->
+    <div class="mt-8 mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">Status</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Status -->
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-sm font-medium text-gray-500">Current Status</h3>
+          {new Date(frontmatter.deadline) >= new Date() ? (
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 w-fit">
+              <span class="w-2 h-2 mr-2 rounded-full bg-green-500"></span>
+              Currently Open
+            </span>
+          ) : (
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 w-fit">
+              <span class="w-2 h-2 mr-2 rounded-full bg-red-500"></span>
+              Closed
+            </span>
+          )}
+        </div>
+
+        <!-- Application Timeline -->
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-sm font-medium text-gray-500">Application Timeline</h3>
+          <p class="text-sm text-gray-900">Opens: {formattedOpenDate}</p>
+          <p class="text-sm text-gray-900">Deadline: {formattedDeadline}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Program Details -->
+    <div class="mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">Program Details</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Location Details -->
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-sm font-medium text-gray-500">Location</h3>
+          <p class="text-sm text-gray-900">Country: {frontmatter.country}</p>
+          <p class="text-sm text-gray-900">Institution: {frontmatter.hostInstitution}</p>
+        </div>
+
+        <!-- Program Info -->
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-sm font-medium text-gray-500">Program Info</h3>
+          <p class="text-sm text-gray-900">Level: {frontmatter.levelOfStudy}</p>
+          <p class="text-sm text-gray-900">Funding: {frontmatter.fundingType}</p>
+          <p class="text-sm text-gray-900">Recipients: {frontmatter.numberOfRecipients}</p>
+        </div>
+
+        <!-- Category and Tags -->
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-sm font-medium text-gray-500">Category</h3>
+          <p class="text-sm text-gray-900">{frontmatter.category.replace('-', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+          <div class="flex flex-wrap gap-2 mt-1">
+            {frontmatter.tags.map((tag: string) => (
+              <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div id="summary-section" class="mt-8 mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200 hidden">
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">Overview</h2>
+      <div id="opportunity-summary" class="text-gray-700 prose-sm">
+        <slot name="summary" />
+      </div>
+    </div>
+
+    <div id="blog-content">
+      <slot />
+    </div>
+
+    <!-- Application Timeline -->
+    <ApplicationTimeline 
+      openDate={frontmatter.openDate}
+      deadline={frontmatter.deadline}
+      category={frontmatter.category}
+    />
+    
+    <div class="mt-8 text-center sm:text-left">
+      <a 
+        href={frontmatter.officialLink} 
+        class="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-sm transition-colors text-sm sm:text-base"
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        Apply Now on Official Website
+      </a>
+    </div>
+
+    <div class="mt-8">
+      <AuthorCard
+        client:only="react"
+        name={frontmatter.author}
+      />
+    </div>
+
+    <!-- Add Social Share Component -->
+    <SocialShare title={frontmatter.title} url={Astro.url.href} />
+
+    <div class="mt-8 bg-white rounded-lg border border-gray-200 p-6">
+      <h3 class="text-xl font-semibold mb-6">Comments</h3>
+      <GiscusComments client:only="react" />
+    </div>
+  </article>
+</Layout>
+
+<style is:global>
+  /* Typography */
+  .prose h1 {
+    @apply text-2xl sm:text-3xl font-bold mb-6 border-b border-gray-200 pb-3;
+  }
+  
+  .prose h2 {
+    @apply text-xl sm:text-2xl font-bold mb-4 text-gray-800 mt-0 pt-0;
+  }
+  
+  .prose h3 {
+    @apply text-lg sm:text-xl font-bold mt-6 mb-3 text-gray-700;
+  }
+  
+  .prose p {
+    @apply my-4 text-gray-700 leading-relaxed text-sm sm:text-base;
+  }
+  
+  /* List styling */
+  .prose ul {
+    @apply my-6 pl-5 space-y-2 list-none; /* Added list-none to remove default bullets */
+  }
+  
+  .prose ol {
+    @apply my-6 pl-5 space-y-2 list-decimal;
+  }
+  
+  .prose li {
+    @apply mb-2 pl-2 text-sm sm:text-base;
+  }
+  
+  .prose ul li::before {
+    content: "•";
+    @apply text-primary-500 font-bold mr-2 inline-block;
+  }
+  
+  .prose ol li::marker {
+    @apply text-primary-500 font-semibold;
+  }
+  
+  /* Section styling */
+  .section-block {
+    @apply bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-6 sm:mb-8;
+  }
+  
+  /* Table styling */
+  .prose table {
+    @apply w-full border-collapse my-6 text-sm sm:text-base;
+  }
+  
+  .prose table th {
+    @apply bg-gray-50 text-left p-2 sm:p-3 border-b-2 border-gray-200 font-semibold text-gray-700;
+  }
+  
+  .prose table td {
+    @apply p-2 sm:p-3 border-b border-gray-100 text-gray-700;
+  }
+  
+  /* Blockquote styling */
+  .prose blockquote {
+    @apply italic border-l-4 border-primary-200 pl-4 py-2 my-6 text-gray-600;
+  }
+  
+  /* Link styling */
+  .prose a {
+    @apply text-primary-600 hover:text-primary-800 transition-colors;
+  }
+  
+  /* Code block styling */
+  .prose pre {
+    @apply bg-gray-50 p-3 sm:p-4 rounded-md overflow-x-auto my-6 border border-gray-100 text-sm;
+  }
+  
+  .prose code {
+    @apply bg-gray-50 px-1 py-0.5 rounded text-xs sm:text-sm text-gray-800;
+  }
+  
+  .prose pre code {
+    @apply bg-transparent px-0 py-0 text-sm sm:text-base;
+  }
+  
+  /* Horizontal rule */
+  .prose hr {
+    @apply my-8 border-t border-gray-200;
+  }
+  
+  /* Image styling */
+  .prose img {
+    @apply rounded-md mx-auto my-6 max-w-full;
+  }
+  
+  /* Special callout boxes - minimal style */
+  .prose .note,
+  .prose .important,
+  .prose .tip {
+    @apply border-l-4 py-3 px-4 my-6 bg-gray-50;
+  }
+  
+  .prose .note {
+    @apply border-blue-300;
+  }
+  
+  .prose .important {
+    @apply border-amber-300;
+  }
+  
+  .prose .tip {
+    @apply border-green-300;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the content container
+    const contentContainer = document.getElementById('blog-content');
+    if (!contentContainer) return;
+    
+    // Process the first paragraph for summary
+    processFirstParagraph();
+    
+    // Apply section blocks
+    applySectionBlocks();
+    
+    function processFirstParagraph() {
+      const summaryArea = document.getElementById('opportunity-summary');
+      if (!summaryArea || summaryArea.children.length > 0) return;
+      
+      const summarySection = document.getElementById('summary-section');
+      
+      // Find the first h1 and following paragraph
+      const firstH1 = contentContainer.querySelector('h1');
+      if (firstH1) {
+        firstH1.style.display = 'none';
+        let nextEl = firstH1.nextElementSibling;
+        if (nextEl && nextEl.tagName === 'P') {
+          summaryArea.innerHTML = nextEl.innerHTML;
+          summarySection.classList.remove('hidden');
+          nextEl.style.display = 'none';
+        }
+      } else {
+        // If no h1, use the first paragraph
+        const firstP = contentContainer.querySelector('p');
+        if (firstP) {
+          summaryArea.innerHTML = firstP.innerHTML;
+          summarySection.classList.remove('hidden');
+          firstP.style.display = 'none';
+        }
+      }
+    }
+    
+    function applySectionBlocks() {
+      // Add the 'prose' class to the content container to enable prose styling
+      contentContainer.classList.add('prose', 'prose-lg', 'max-w-none');
+      
+      // First, directly wrap existing sections in Markdown that are already divided by h2
+      wrapExistingSections();
+    }
+    
+    function getSectionClass(headingText) {
+      headingText = headingText.toLowerCase();
+      
+      if (headingText.includes('overview') || headingText.includes('introduction') || 
+          headingText.includes('program overview') || headingText.includes('scholarship overview')) {
+        return 'overview-section';
+      } else if (headingText.includes('benefit') || headingText.includes('financial')) {
+        return 'benefits-section';
+      } else if (headingText.includes('eligibility') || headingText.includes('requirement') || 
+                headingText.includes('criteria') || headingText.includes('qualification')) {
+        return 'eligibility-section';
+      } else if (headingText.includes('application') || headingText.includes('process') || 
+                headingText.includes('how to apply') || headingText.includes('submission') || 
+                headingText.includes('document')) {
+        return 'application-section';
+      } else if (headingText.includes('date') || headingText.includes('timeline') || 
+                headingText.includes('deadline') || headingText.includes('important dates')) {
+        return 'dates-section';
+      } else if (headingText.includes('contact') || headingText.includes('information') || 
+                headingText.includes('inquiries')) {
+        return 'contact-section';
+      } else if (headingText.includes('tip') || headingText.includes('advice') || 
+                headingText.includes('recommendation') || headingText.includes('success')) {
+        return 'tips-section';
+      } else {
+        return 'misc-section';
+      }
+    }
+    
+    function wrapExistingSections() {
+      // Get all the h2 elements
+      const h2Elements = contentContainer.querySelectorAll('h2');
+      const summarySection = document.getElementById('summary-section');
+      const hasSummary = !summarySection.classList.contains('hidden');
+      
+      // If no h2 elements, wrap everything in a single section
+      if (h2Elements.length === 0) {
+        // Only create overview section if no summary exists
+        if (!hasSummary) {
+          const sectionBlock = document.createElement('div');
+          sectionBlock.className = 'section-block overview-section';
+          
+          // Clone all children
+          while (contentContainer.firstChild) {
+            sectionBlock.appendChild(contentContainer.firstChild);
+          }
+          
+          contentContainer.appendChild(sectionBlock);
+        }
+        return;
+      }
+      
+      // Mark positions of all h2 elements
+      const sections = [];
+      let firstContentBeforeH2 = [];
+      
+      // Check if there's content before the first h2
+      let currentNode = contentContainer.firstChild;
+      const firstH2 = h2Elements[0];
+      
+      while (currentNode && currentNode !== firstH2) {
+        if (currentNode.nodeType === 1 || 
+            (currentNode.nodeType === 3 && currentNode.textContent.trim())) {
+          firstContentBeforeH2.push(currentNode);
+        }
+        currentNode = currentNode.nextSibling;
+      }
+      
+      // If there's content before the first h2, create an intro section
+      if (firstContentBeforeH2.length > 0) {
+        // Only create intro section if no summary exists
+        if (!hasSummary) {
+          const introBlock = document.createElement('div');
+          introBlock.className = 'section-block overview-section';
+          
+          // Move the intro content into the block
+          firstContentBeforeH2.forEach(node => {
+            introBlock.appendChild(node);
+          });
+          
+          // Add this to the beginning of our sections array
+          sections.push(introBlock);
+        }
+      }
+      
+      // Process each h2 section
+      h2Elements.forEach((h2, index) => {
+        const sectionContent = [h2];
+        let sectionClass = getSectionClass(h2.textContent);
+        
+        // Find all content until the next h2 or the end
+        let nextNode = h2.nextSibling;
+        const nextH2 = h2Elements[index + 1];
+        
+        while (nextNode && nextNode !== nextH2) {
+          // Only include element nodes and non-empty text nodes
+          if (nextNode.nodeType === 1 || 
+              (nextNode.nodeType === 3 && nextNode.textContent.trim())) {
+            sectionContent.push(nextNode);
+          }
+          nextNode = nextNode.nextSibling;
+        }
+        
+        // Create a new section block
+        const sectionBlock = document.createElement('div');
+        sectionBlock.className = `section-block ${sectionClass}`;
+        
+        // Move all content into the section block
+        sectionContent.forEach(node => {
+          sectionBlock.appendChild(node);
+        });
+        
+        // Add this section to our array
+        sections.push(sectionBlock);
+      });
+      
+      // Clear the container and add all the section blocks
+      while (contentContainer.firstChild) {
+        contentContainer.removeChild(contentContainer.firstChild);
+      }
+      
+      sections.forEach(section => {
+        contentContainer.appendChild(section);
+      });
+    }
+  });
+</script>

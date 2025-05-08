@@ -1,0 +1,125 @@
+---
+// OpportunityCard.astro - Reusable card component for all opportunities and scholarships
+import { format } from 'date-fns';
+
+interface Props {
+  item: {
+    title: string;
+    slug: string;
+    hostInstitution: string;
+    country: string; 
+    fundingType: string;
+    deadline: string;
+    category: string;
+    openDate: string;
+  };
+}
+
+const { item } = Astro.props;
+const today = new Date();
+const isCurrentlyOpen = new Date(item.deadline) >= today;
+const openingSoon = new Date(item.openDate) > today;
+
+// Add featured highlight for approaching deadlines
+const isApproachingDeadline = isCurrentlyOpen && 
+  new Date(item.deadline).getTime() - today.getTime() < 30 * 24 * 60 * 60 * 1000; // 30 days
+const featuredHighlight = isApproachingDeadline ? 'border-l-4 border-l-[var(--card-border-color)]' : '';
+
+// Determine the correct URL based on category
+let postUrl = "";
+if (item.category === 'government-scholarship' || item.category === 'university-scholarship') {
+  postUrl = `/scholarships/${item.slug}`;
+} else if (item.category === 'internship' || item.category === 'fellowship') {
+  postUrl = `/opportunities/${item.slug}`;
+} else {
+  // Fallback to blog URL if category is unknown (shouldn't happen)
+  postUrl = `/blog/${item.slug}`;
+}
+---
+
+<a 
+  href={postUrl} 
+  class={`block border border-[var(--card-border-color)] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:translate-y-[-2px] bg-white ${featuredHighlight} relative`}
+>
+  {/* Brutalism effect with right and bottom borders */}
+  <div class="absolute bottom-0 right-0 w-full h-full card-brutalism rounded-lg pointer-events-none -z-10 translate-x-1 translate-y-1"></div>
+  
+  <div class="p-6">
+    <div class="mb-4 flex flex-wrap gap-2">
+      {isCurrentlyOpen ? (
+        <span class="inline-block px-3 py-1 badge-success rounded-full text-xs sm:text-sm">
+          Currently Open
+        </span>
+      ) : openingSoon ? (
+        <span class="inline-block px-3 py-1 badge-warning rounded-full text-xs sm:text-sm">
+          Opens {format(new Date(item.openDate), 'MMM d, yyyy')}
+        </span>
+      ) : (
+        <span class="inline-block px-3 py-1 badge-error rounded-full text-xs sm:text-sm">
+          Closed
+        </span>
+      )}
+      
+      {item.category === 'government-scholarship' && (
+        <span class="inline-block px-3 py-1 badge-secondary rounded-full text-xs sm:text-sm">
+          Government Scholarship
+        </span>
+      )}
+      {item.category === 'university-scholarship' && (
+        <span class="inline-block px-3 py-1 badge-primary rounded-full text-xs sm:text-sm">
+          University Scholarship
+        </span>
+      )}
+      {item.category === 'internship' && (
+        <span class="inline-block px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs sm:text-sm">
+          Internship
+        </span>
+      )}
+      {item.category === 'fellowship' && (
+        <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs sm:text-sm">
+          Fellowship
+        </span>
+      )}
+    </div>
+    
+    <h2 class="text-xl font-bold mb-4 text-[#3c5894]">{item.title}</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      <div class="flex items-center gap-2">
+        <span class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </span>
+        <span class="text-sm text-gray-800">{item.hostInstitution}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </span>
+        <span class="text-sm text-gray-800">{item.country}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </span>
+        <span class="text-sm text-gray-800">{item.fundingType}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </span>
+        <span class={`text-sm font-bold ${isCurrentlyOpen ? 'text-green-600' : 'text-red-600'}`}>
+          Deadline: {format(new Date(item.deadline), 'MMM d, yyyy')}
+        </span>
+      </div>
+    </div>
+  </div>
+</a>

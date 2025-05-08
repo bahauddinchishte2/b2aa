@@ -1,0 +1,390 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+
+// Get query parameter
+const query = Astro.url.searchParams.get('q') || '';
+
+// Get all content collections
+const allScholarships = await getCollection('scholarships');
+const allOpportunities = await getCollection('opportunities');
+const allResources = await getCollection('resources');
+const today = new Date();
+
+// Function to highlight matching text
+function highlightMatch(text, query) {
+  if (!query || !text) return text;
+  
+  // Escape special regex characters in the query
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  
+  // Create a regex to find the query in the text (case insensitive)
+  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+  
+  // Replace matches with highlighted version
+  return text.replace(regex, '<span class="bg-yellow-100 font-medium">$1</span>');
+}
+
+// Format date function
+function formatDate(dateString) {
+  return format(new Date(dateString), 'MMM d, yyyy');
+}
+
+// Combine scholarships, opportunities, and resources for search
+const scholarships = allScholarships.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  fundingType: post.data.fundingType,
+  levelOfStudy: post.data.levelOfStudy,
+  category: post.data.category,
+  tags: post.data.tags,
+  deadline: post.data.deadline,
+  slug: post.slug,
+  type: 'scholarship',
+  searchText: `${post.data.title} ${post.data.country} ${post.data.fundingType} ${post.data.levelOfStudy} ${post.data.category} ${post.data.tags.join(' ')}`
+}));
+
+const opportunities = allOpportunities.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  fundingType: post.data.fundingType,
+  levelOfStudy: post.data.levelOfStudy,
+  category: post.data.category,
+  tags: post.data.tags,
+  deadline: post.data.deadline,
+  slug: post.slug,
+  type: 'opportunity',
+  searchText: `${post.data.title} ${post.data.country} ${post.data.fundingType} ${post.data.levelOfStudy} ${post.data.category} ${post.data.tags.join(' ')}`
+}));
+
+const resources = allResources.map(resource => ({
+  title: resource.data.title,
+  description: resource.data.description,
+  area: resource.data.area,
+  category: resource.data.category,
+  tags: resource.data.tags,
+  lastUpdated: resource.data.lastUpdated,
+  slug: resource.slug,
+  type: 'resource',
+  searchText: `${resource.data.title} ${resource.data.description} ${resource.data.area} ${resource.data.category} ${resource.data.tags.join(' ')}`
+}));
+
+// Combine and search
+const allItems = [...scholarships, ...opportunities, ...resources];
+
+// Simple search function
+function searchItems(items, searchQuery) {
+  if (!searchQuery) return [];
+  
+  const lowerQuery = searchQuery.toLowerCase();
+  return items.filter(item => 
+    item.searchText.toLowerCase().includes(lowerQuery)
+  );
+}
+
+// Get search results
+const searchResults = query ? searchItems(allItems, query) : [];
+
+// Group results by type
+const groupedResults = {
+  scholarships: searchResults.filter(item => item.type === 'scholarship'),
+  opportunities: searchResults.filter(item => item.type === 'opportunity'),
+  resources: searchResults.filter(item => item.type === 'resource')
+};
+---
+
+<Layout 
+  title={`Search Results: ${query}`}
+  description={`Search results for "${query}" - Find relevant scholarships, internships, fellowships, and resources.`}
+  keywords={["search", "scholarships", "opportunities", "resources", query]}
+  hideTopSearch={true}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <h1 class="text-2xl sm:text-3xl font-bold text-center mb-8">Search Results for "{query}"</h1>
+    
+    <!-- Search box at the top -->
+    <div class="mb-10 max-w-3xl mx-auto">
+      <form action="/search" method="get" class="flex">
+        <div class="relative flex-grow">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input 
+            type="search" 
+            name="q"
+            value={query}
+            class="w-full pl-10 pr-4 py-3 text-base text-gray-900 bg-white border-2 border-primary-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-primary-200/50 focus:border-primary-300 transition-all duration-300"
+            placeholder="Search for scholarships, opportunities or resources..."
+          />
+        </div>
+        <button
+          type="submit"
+          class="px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-base font-medium rounded-r-xl hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-200/50 focus:ring-offset-2 transition-all duration-300"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+    
+    {/* No results message */}
+    {searchResults.length === 0 && query && (
+      <div class="text-center py-10">
+        <div class="text-6xl mb-4">🔍</div>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">No results found</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">
+          We couldn't find any matches for "{query}". Try using different keywords or check your spelling.
+        </p>
+      </div>
+    )}
+    
+    {/* Search results */}
+    {searchResults.length > 0 && (
+      <div class="space-y-10">
+        {/* Scholarship results */}
+        {groupedResults.scholarships.length > 0 && (
+          <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 pb-2 border-b">
+              Scholarships
+              <span class="text-gray-500 font-normal text-lg">({groupedResults.scholarships.length})</span>
+            </h2>
+            
+            <div class="space-y-6">
+              {groupedResults.scholarships.map(item => {
+                const isOpen = new Date(item.deadline) >= today;
+                
+                return (
+                  <a 
+                    href={`/scholarships/${item.slug}`} 
+                    class="block bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+                  >
+                    <div class="mb-3 flex flex-wrap gap-2">
+                      <span class={`inline-block px-3 py-1 rounded-full text-xs ${isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {isOpen ? 'Currently Open' : 'Closed'}
+                      </span>
+                      
+                      {item.category === 'government-scholarship' && (
+                        <span class="inline-block px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                          Government Scholarship
+                        </span>
+                      )}
+                      {item.category === 'university-scholarship' && (
+                        <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                          University Scholarship
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h3 class="text-lg font-bold mb-2" set:html={highlightMatch(item.title, query)} />
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </span>
+                        <span set:html={highlightMatch(item.country, query)} />
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                        </span>
+                        <span set:html={highlightMatch(item.levelOfStudy, query)} />
+                      </div>
+                      {item.fundingType && (
+                        <div class="flex items-center gap-1">
+                          <span class="text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </span>
+                          <span set:html={highlightMatch(item.fundingType, query)} />
+                        </div>
+                      )}
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </span>
+                        <span class={isOpen ? 'text-green-600' : 'text-red-600'}>
+                          Deadline: {formatDate(item.deadline)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {item.tags && item.tags.length > 0 && (
+                      <div class="mt-3 flex flex-wrap gap-2">
+                        {item.tags.slice(0, 3).map(tag => (
+                          <span class={`px-2 py-1 bg-gray-100 rounded-full text-xs ${tag.toLowerCase().includes(query.toLowerCase()) ? 'bg-yellow-100 font-medium' : ''}`}>
+                            {tag}
+                          </span>
+                        ))}
+                        {item.tags.length > 3 && (
+                          <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">+{item.tags.length - 3} more</span>
+                        )}
+                      </div>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+        
+        {/* Opportunity results */}
+        {groupedResults.opportunities.length > 0 && (
+          <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 pb-2 border-b">
+              Opportunities 
+              <span class="text-gray-500 font-normal text-lg">({groupedResults.opportunities.length})</span>
+            </h2>
+            
+            <div class="space-y-6">
+              {groupedResults.opportunities.map(item => {
+                const isOpen = new Date(item.deadline) >= today;
+                
+                return (
+                  <a 
+                    href={`/opportunities/${item.slug}`} 
+                    class="block bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+                  >
+                    <div class="mb-3 flex flex-wrap gap-2">
+                      <span class={`inline-block px-3 py-1 rounded-full text-xs ${isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {isOpen ? 'Currently Open' : 'Closed'}
+                      </span>
+                      
+                      {item.category === 'internship' && (
+                        <span class="inline-block px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs">
+                          Internship
+                        </span>
+                      )}
+                      {item.category === 'fellowship' && (
+                        <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">
+                          Fellowship
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h3 class="text-lg font-bold mb-2" set:html={highlightMatch(item.title, query)} />
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </span>
+                        <span set:html={highlightMatch(item.country, query)} />
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                        </span>
+                        <span set:html={highlightMatch(item.levelOfStudy, query)} />
+                      </div>
+                      {item.fundingType && (
+                        <div class="flex items-center gap-1">
+                          <span class="text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </span>
+                          <span set:html={highlightMatch(item.fundingType, query)} />
+                        </div>
+                      )}
+                      <div class="flex items-center gap-1">
+                        <span class="text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </span>
+                        <span class={isOpen ? 'text-green-600' : 'text-red-600'}>
+                          Deadline: {formatDate(item.deadline)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {item.tags && item.tags.length > 0 && (
+                      <div class="mt-3 flex flex-wrap gap-2">
+                        {item.tags.slice(0, 3).map(tag => (
+                          <span class={`px-2 py-1 bg-gray-100 rounded-full text-xs ${tag.toLowerCase().includes(query.toLowerCase()) ? 'bg-yellow-100 font-medium' : ''}`}>
+                            {tag}
+                          </span>
+                        ))}
+                        {item.tags.length > 3 && (
+                          <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">+{item.tags.length - 3} more</span>
+                        )}
+                      </div>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+        
+        {/* Resource results */}
+        {groupedResults.resources.length > 0 && (
+          <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 pb-2 border-b">
+              Resources & Guides 
+              <span class="text-gray-500 font-normal text-lg">({groupedResults.resources.length})</span>
+            </h2>
+            
+            <div class="grid gap-6 md:grid-cols-2">
+              {groupedResults.resources.map(item => (
+                <a 
+                  href={`/resources/${item.slug}`}
+                  class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden group"
+                >
+                  <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors mb-3"
+                        set:html={highlightMatch(item.title, query)} />
+                    
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2"
+                       set:html={highlightMatch(item.description, query)} />
+                    
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {formatDate(item.lastUpdated)}
+                      </div>
+                      <div class="flex flex-wrap gap-2">
+                        <span class={`px-2 py-1 bg-primary-50 text-primary-700 rounded-full text-xs`}>
+                          {item.area}
+                        </span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+                          {item.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    )}
+  </div>
+</Layout>
+
+<style>
+  /* Style for highlighted text */
+  .highlight {
+    background-color: rgba(252, 211, 77, 0.2);
+    font-weight: 500;
+  }
+</style>

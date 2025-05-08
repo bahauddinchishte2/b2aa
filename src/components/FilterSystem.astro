@@ -1,0 +1,211 @@
+---
+interface Props {
+  filters: {
+    countries?: string[];
+    levels?: string[];
+    fundingTypes?: string[];
+  }
+}
+
+const { filters } = Astro.props;
+
+// Ensure we have arrays even if empty
+const countries = filters.countries || [];
+const levels = filters.levels || [];
+const fundingTypes = filters.fundingTypes || [];
+---
+
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
+  <h2 class="text-lg sm:text-xl font-semibold mb-6">Filter by:</h2>
+
+  <div class="space-y-4">
+    <!-- Study Level Filter -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Study Level</label>
+      <select
+        data-filter="level"
+        class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option value="">All Levels</option>
+        {levels.map(level => (
+          <option value={level}>{level}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Location Filter -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+      <select 
+        data-filter="country"
+        class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option value="">All Locations</option>
+        {countries.map(country => (
+          <option value={country}>{country}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Funding Type Filter -->
+    {fundingTypes && fundingTypes.length > 0 && (
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Funding</label>
+        <select 
+          data-filter="fundingType"
+          class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All Funding</option>
+          {fundingTypes.map(type => (
+            <option value={type}>{type}</option>
+          ))}
+        </select>
+      </div>
+    )}
+
+    <!-- Deadline Filter -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Deadline</label>
+      <select 
+        data-filter="deadline"
+        class="w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option value="">All Deadlines</option>
+        <option value="open">Currently Open</option>
+        <option value="1month">Within 1 Month</option>
+        <option value="2months">Within 2 Months</option>
+        <option value="3months">Within 3 Months</option>
+        <option value="6months">Within 6 Months</option>
+        <option value="12months">Within 1 Year</option>
+      </select>
+    </div>
+
+    <button
+      id="reset-filters"
+      class="w-full mt-6 py-2 px-4 filter-button text-white rounded-md hover:bg-blue-600 transition-colors"
+    >
+      Reset Filters
+    </button>
+  </div>
+</div>
+
+<script>
+  function updateResults() {
+    const opportunities = document.querySelectorAll('.opportunity-card');
+    const filters = {};
+    
+    // Collect active filters
+    document.querySelectorAll('select[data-filter]').forEach(select => {
+      const filterType = select.getAttribute('data-filter');
+      const value = select.value;
+      
+      if (filterType && value) {
+        filters[filterType] = value;
+      }
+    });
+
+    // Apply filters
+    opportunities.forEach(card => {
+      let shouldShow = true;
+
+      // Check each filter
+      Object.entries(filters).forEach(([filterType, value]) => {
+        if (filterType === 'deadline') {
+          const deadlineStr = card.getAttribute('data-deadline');
+          const deadline = deadlineStr ? new Date(deadlineStr) : null;
+          const today = new Date();
+
+          // Skip if no deadline found
+          if (!deadline) {
+            shouldShow = false;
+            return;
+          }
+
+          if (value === 'open') {
+            // Currently Open
+            if (deadline < today) {
+              shouldShow = false;
+            }
+          } else if (value === '1month') {
+            // Within 1 Month
+            const oneMonthFromNow = new Date();
+            oneMonthFromNow.setMonth(today.getMonth() + 1);
+            if (!(deadline >= today && deadline <= oneMonthFromNow)) {
+              shouldShow = false;
+            }
+          } else if (value === '2months') {
+            // Within 2 Months
+            const twoMonthsFromNow = new Date();
+            twoMonthsFromNow.setMonth(today.getMonth() + 2);
+            if (!(deadline >= today && deadline <= twoMonthsFromNow)) {
+              shouldShow = false;
+            }
+          } else if (value === '3months') {
+            // Within 3 Months
+            const threeMonthsFromNow = new Date();
+            threeMonthsFromNow.setMonth(today.getMonth() + 3);
+            if (!(deadline >= today && deadline <= threeMonthsFromNow)) {
+              shouldShow = false;
+            }
+          } else if (value === '6months') {
+            // Within 6 Months
+            const sixMonthsFromNow = new Date();
+            sixMonthsFromNow.setMonth(today.getMonth() + 6);
+            if (!(deadline >= today && deadline <= sixMonthsFromNow)) {
+              shouldShow = false;
+            }
+          } else if (value === '12months') {
+            // Within 12 Months
+            const oneYearFromNow = new Date();
+            oneYearFromNow.setMonth(today.getMonth() + 12);
+            if (!(deadline >= today && deadline <= oneYearFromNow)) {
+              shouldShow = false;
+            }
+          }
+        } else {
+          const cardValue = card.getAttribute(`data-${filterType}`);
+          if (!cardValue || !cardValue.includes(value)) {
+            shouldShow = false;
+          }
+        }
+      });
+
+      card.style.display = shouldShow ? 'block' : 'none';
+    });
+
+    // Check if there are no visible results
+    const visibleCards = Array.from(opportunities).filter(card => card.style.display !== 'none');
+    const noResultsMessage = document.getElementById('no-results-message');
+    
+    if (noResultsMessage) {
+      noResultsMessage.style.display = visibleCards.length === 0 ? 'block' : 'none';
+    } else if (visibleCards.length === 0) {
+      // Create no results message if it doesn't exist
+      const messageDiv = document.createElement('div');
+      messageDiv.id = 'no-results-message';
+      messageDiv.className = 'bg-white p-6 rounded-lg shadow-md text-center border border-gray-200 mt-6';
+      messageDiv.innerHTML = '<p class="text-gray-600">No opportunities match your filters. Try adjusting your criteria.</p>';
+      
+      const contentArea = document.querySelector('.lg\\:col-span-3');
+      if (contentArea) {
+        contentArea.appendChild(messageDiv);
+      }
+    }
+  }
+
+  // Add event listeners to all filter selects
+  document.querySelectorAll('select[data-filter]').forEach(select => {
+    select.addEventListener('change', updateResults);
+  });
+
+  // Reset filters
+  document.getElementById('reset-filters')?.addEventListener('click', () => {
+    document.querySelectorAll('select[data-filter]').forEach(select => {
+      select.value = '';
+    });
+    updateResults();
+  });
+
+  // Initialize filters
+  updateResults();
+</script>

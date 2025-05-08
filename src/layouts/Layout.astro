@@ -1,0 +1,230 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SEO from '../components/SEO.astro';
+import { getCollection } from 'astro:content';
+import '../styles/theme.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  type?: 'website' | 'article' | 'scholarship' | 'opportunity' | 'resource';
+  contentType?: 'blog' | 'scholarship' | 'opportunity' | 'resource';
+  publishDate?: string;
+  modifiedDate?: string;
+  author?: string;
+  keywords?: string[];
+  noindex?: boolean;
+  nofollow?: boolean;
+  hideTopSearch?: boolean;
+  scholarship?: {
+    deadline?: string;
+    fundingType?: string;
+    country?: string;
+    levelOfStudy?: string;
+    hostInstitution?: string;
+    category?: string;
+  };
+  opportunity?: {
+    deadline?: string;
+    fundingType?: string;
+    country?: string;
+    levelOfStudy?: string;
+    hostInstitution?: string;
+    category?: string;
+  };
+  resource?: {
+    area?: string;
+    category?: string;
+    lastUpdated?: string;
+  };
+}
+
+// Get all content for search functionality
+const allScholarships = await getCollection('scholarships');
+const allOpportunities = await getCollection('opportunities');
+const allResources = await getCollection('resources');
+const allBlogPosts = await getCollection('blog');
+
+// Prepare search data
+const searchData = [
+  ...allScholarships.map(post => ({
+    title: post.data.title,
+    country: post.data.country,
+    fundingType: post.data.fundingType,
+    levelOfStudy: post.data.levelOfStudy,
+    category: post.data.category,
+    tags: post.data.tags,
+    slug: post.slug,
+    type: 'scholarship'
+  })),
+  ...allOpportunities.map(post => ({
+    title: post.data.title,
+    country: post.data.country,
+    fundingType: post.data.fundingType,
+    levelOfStudy: post.data.levelOfStudy,
+    category: post.data.category,
+    tags: post.data.tags,
+    slug: post.slug,
+    type: 'opportunity'
+  })),
+  ...allResources.map(resource => ({
+    title: resource.data.title,
+    description: resource.data.description,
+    area: resource.data.area,
+    category: resource.data.category,
+    tags: resource.data.tags,
+    slug: resource.slug,
+    type: 'resource'
+  })),
+  ...allBlogPosts.map(post => ({
+    title: post.data.title,
+    excerpt: post.data.excerpt,
+    tags: post.data.tags,
+    category: post.data.category,
+    slug: post.slug,
+    type: 'blog'
+  }))
+];
+
+const { 
+  title, 
+  description = "Empowering Bangladeshi students with comprehensive information about international educational opportunities.",
+  image = '/images/og-image.jpeg',
+  canonical,
+  type = 'website',
+  contentType,
+  publishDate,
+  modifiedDate,
+  author,
+  keywords,
+  noindex,
+  nofollow,
+  hideTopSearch = false,
+  scholarship,
+  opportunity,
+  resource
+} = Astro.props;
+
+// Check if current page is homepage
+const isHomePage = Astro.url.pathname === '/';
+
+// Determine the title to display
+const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh to Abroad`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- Google Analytics -->
+    <!-- Replace G-XXXXXXXXXX with your actual Google Analytics Tracking ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D6YBDD7R2Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D6YBDD7R2Y');
+    </script>
+    
+    <!-- SEO Component -->
+    <SEO
+      title={pageTitle}
+      description={description}
+      image={image}
+      canonical={canonical}
+      type={type}
+      contentType={contentType}
+      publishDate={publishDate}
+      modifiedDate={modifiedDate}
+      author={author}
+      keywords={keywords}
+      noindex={noindex}
+      nofollow={nofollow}
+      scholarship={scholarship}
+      opportunity={opportunity}
+      resource={resource}
+    />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <script define:vars={{ searchData }}>
+      // Make search data available globally
+      window.SEARCH_DATA = searchData;
+    </script>
+    <Header />
+    <main class="flex-grow flex flex-col">
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Theme switcher initialization script -->
+    <script>
+      import { defaultTheme, updateTheme } from '../config/theme';
+
+      // Initialize theme on page load
+      document.addEventListener('DOMContentLoaded', () => {
+        // Try to load saved theme from localStorage
+        const savedTheme = localStorage.getItem('site-theme');
+        
+        if (savedTheme) {
+          try {
+            const themeData = JSON.parse(savedTheme);
+            updateTheme(themeData);
+          } catch (e) {
+            console.error('Error loading saved theme, using default', e);
+            updateTheme(defaultTheme);
+          }
+        } else {
+          // Use default theme
+          updateTheme(defaultTheme);
+        }
+      });
+
+      // Expose theme functions to global scope for easier access
+      window.themeUtils = {
+        updateTheme,
+        
+        // Function to change theme and save to localStorage
+        changeTheme: (newTheme) => {
+          updateTheme(newTheme);
+          localStorage.setItem('site-theme', JSON.stringify(newTheme));
+        },
+        
+        // Function to reset to default theme
+        resetTheme: () => {
+          updateTheme(defaultTheme);
+          localStorage.setItem('site-theme', JSON.stringify(defaultTheme));
+        }
+      };
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent: 136, 58, 234;
+    --accent-light: 224, 204, 250;
+    --accent-dark: 49, 10, 101;
+    font-family: 'Poppins', sans-serif;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%
+    );
+  }
+  
+  /* Add padding at the bottom for mobile devices to account for the bottom navigation */
+  @media (max-width: 768px) {
+    body {
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+  }
+</style>

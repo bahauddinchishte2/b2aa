@@ -1,0 +1,355 @@
+---
+import Layout from './Layout.astro';
+import { format } from 'date-fns';
+import AuthorCard from '../components/AuthorCard.tsx';
+import GiscusComments from '../components/GiscusComments.tsx';
+import SocialShare from '../components/SocialShare.astro';
+
+const { frontmatter } = Astro.props;
+const rawContent = await Astro.slots.render('default');
+
+// Extract headings from content using a more robust regex that handles MDX content
+const headings = Array.from(rawContent.matchAll(/<h([23])[^>]*>(.*?)<\/h\1>/g)).map(match => {
+  const level = parseInt(match[1]);
+  const text = match[2].replace(/<[^>]*>/g, '').trim();
+  const id = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+  return { level, text, id };
+});
+
+// Create keywords for SEO
+const keywords = [
+  frontmatter.area,
+  frontmatter.category.replace('-', ' '),
+  'guide',
+  'resource',
+  'Bangladesh students',
+  'study abroad',
+  ...frontmatter.tags
+];
+---
+
+<Layout 
+  title={frontmatter.title}
+  description={frontmatter.description}
+  type="article"
+  contentType="resource"
+  publishDate={frontmatter.lastUpdated}
+  modifiedDate={frontmatter.lastUpdated}
+  author={frontmatter.author}
+  keywords={keywords}
+  resource={{
+    area: frontmatter.area,
+    category: frontmatter.category,
+    lastUpdated: frontmatter.lastUpdated
+  }}
+>
+  <article class="max-w-7xl mx-auto px-4 py-4 sm:py-6 md:py-8">
+    <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+      <!-- Table of Contents - Fixed on Desktop -->
+      <aside class="hidden lg:block">
+        <div class="sticky top-24 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:border-primary-200 transition-colors" id="table-of-contents">
+            <h2 class="text-lg font-semibold mb-6 text-gray-900 pb-2 border-b border-gray-100">Table of Contents</h2>
+            <nav class="space-y-3">
+              {headings.map((heading) => (
+                <a
+                  href={`#${heading.id}`}
+                  class={`block text-gray-600 hover:text-primary-600 transition-colors ${
+                    heading.level === 2 
+                      ? 'text-sm font-medium hover:bg-primary-50/50 px-2 py-1.5 -mx-2 rounded-lg' 
+                      : 'text-xs text-gray-500 pl-4 hover:text-primary-600'
+                  }`}
+                >
+                  {heading.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="lg:col-span-3">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-8">
+          <header class="mb-6 sm:mb-8">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 break-words">
+              {frontmatter.title}
+            </h1>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-600">
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Last Updated: {format(new Date(frontmatter.lastUpdated || new Date()), 'MMMM d, yyyy')}
+              </span>
+              <span class="flex items-center flex-wrap gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                {frontmatter.tags.map((tag: string) => (
+                  <span class="inline-block bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
+                    #{tag}
+                  </span>
+                ))}
+              </span>
+            </div>
+          </header>
+
+          <!-- Mobile Table of Contents Toggle -->
+          <div class="lg:hidden mb-8">
+            <button
+              id="toc-toggle"
+              class="w-full flex items-center justify-between p-3 sm:p-4 bg-white rounded-lg text-gray-700 hover:bg-gray-50 transition-colors border border-gray-200"
+            >
+              <span class="font-medium">Table of Contents</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform" id="toc-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div id="mobile-toc" class="hidden mt-3 sm:mt-4 p-3 sm:p-4 bg-white rounded-lg border border-gray-200">
+              <nav class="space-y-3">
+                {headings.map((heading) => (
+                  <a
+                    href={`#${heading.id}`}
+                    class={`block text-gray-600 hover:text-primary-600 transition-colors ${
+                      heading.level === 2 
+                        ? 'text-sm font-medium hover:bg-primary-50/50 px-2 py-1.5 -mx-2 rounded-lg' 
+                        : 'text-xs text-gray-500 pl-4 hover:text-primary-600'
+                    }`}
+                  >
+                    {heading.text}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="prose prose-base sm:prose-lg max-w-none" id="content">
+            {/* Hide the first h1 from the content since we already show it in the header */}
+            <div class="first-heading-hidden">
+              <slot />
+            </div>
+          </div>
+
+          <!-- Author Card -->
+          <div class="mt-12">
+            <AuthorCard
+              client:only="react"
+              name={frontmatter.author}
+            />
+          </div>
+
+          <!-- Social Share -->
+          <SocialShare title={frontmatter.title} url={Astro.url.href} />
+
+          <!-- Comments -->
+          <div class="mt-12">
+            <h3 class="text-xl font-semibold mb-6">Comments</h3>
+            <GiscusComments client:only="react" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style is:global>
+  /* Hide the first h1 in the content */
+  .first-heading-hidden > h1:first-child {
+    display: none;
+  }
+
+  /* Typography */
+  .prose h2 {
+    @apply text-xl sm:text-2xl font-bold mt-8 sm:mt-12 mb-4 sm:mb-6 pb-2 border-b border-gray-200 scroll-mt-24;
+  }
+  
+  .prose h3 {
+    @apply text-lg sm:text-xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 scroll-mt-24;
+  }
+  
+  .prose p {
+    @apply text-gray-700 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base;
+  }
+  
+  .prose ul {
+    @apply my-4 sm:my-6 pl-4 sm:pl-6 space-y-1 sm:space-y-2 list-disc text-sm sm:text-base;
+  }
+  
+  .prose ol {
+    @apply my-4 sm:my-6 pl-4 sm:pl-6 space-y-1 sm:space-y-2 list-decimal text-sm sm:text-base;
+  }
+  
+  .prose li {
+    @apply text-gray-700 text-sm sm:text-base;
+  }
+  
+  .prose a {
+    @apply text-primary-600 hover:text-primary-700 transition-colors;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-primary-200 pl-4 py-2 my-6 text-gray-600 italic;
+  }
+  
+  .prose code {
+    @apply bg-gray-50 px-1 py-0.5 rounded text-xs sm:text-sm text-gray-800;
+  }
+  
+  .prose pre {
+    @apply bg-gray-50 p-3 sm:p-4 rounded-lg overflow-x-auto my-4 sm:my-6 border border-gray-100;
+  }
+  
+  .prose img {
+    @apply rounded-lg shadow-md my-6 sm:my-8 mx-auto;
+  }
+  
+  /* Special callouts */
+  .prose .note,
+  .prose .warning,
+  .prose .tip {
+    @apply p-3 sm:p-4 my-4 sm:my-6 rounded-lg text-sm sm:text-base;
+  }
+  
+  .prose .note {
+    @apply bg-blue-50 border-l-4 border-blue-500;
+  }
+  
+  .prose .warning {
+    @apply bg-yellow-50 border-l-4 border-yellow-500;
+  }
+  
+  .prose .tip {
+    @apply bg-green-50 border-l-4 border-green-500;
+  }
+</style>
+
+<script>
+  // Function to extract text content from HTML
+  function extractTextContent(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+
+  // Function to generate heading IDs
+  function generateId(text) {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  }
+
+  // Add IDs to headings after content is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const content = document.getElementById('content');
+    if (!content) return;
+    
+    // Get all h2 and h3 headings
+    const headings = content.querySelectorAll('h2, h3');
+    const toc = document.getElementById('table-of-contents');
+    const nav = toc?.querySelector('nav');
+
+    if (nav && headings.length > 0) {
+      // Clear existing TOC content
+      nav.innerHTML = '';
+      let lastMainHeading = null;
+
+      // Add each heading to TOC
+      headings.forEach(heading => {
+        // Generate ID if not present
+        if (!heading.id) {
+          heading.id = generateId(heading.textContent);
+        }
+
+        // Create TOC entry with proper styling
+        const link = document.createElement('a');
+        link.href = `#${heading.id}`;
+        link.textContent = heading.textContent;
+        
+        if (heading.tagName === 'H2') {
+          link.className = 'block text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50/50 px-2 py-1.5 -mx-2 rounded-lg transition-colors';
+          lastMainHeading = link;
+        } else {
+          link.className = 'block text-xs text-gray-500 pl-4 hover:text-primary-600 transition-colors';
+        }
+
+        nav.appendChild(link);
+      });
+    }
+  });
+
+  // Mobile Table of Contents Toggle
+  const tocToggle = document.getElementById('toc-toggle');
+  const mobileToc = document.getElementById('mobile-toc');
+  const tocIcon = document.getElementById('toc-icon');
+  
+  if (tocToggle && mobileToc && tocIcon) {
+    tocToggle.addEventListener('click', () => {
+      mobileToc.classList.toggle('hidden');
+      tocIcon.classList.toggle('rotate-180');
+    });
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const href = this.getAttribute('href');
+      if (!href) return;
+      
+      const target = document.querySelector(href);
+      if (!target) return;
+      
+      target.scrollIntoView({
+        behavior: 'smooth'
+      });
+      
+      // Update URL without scrolling
+      history.pushState(null, '', href);
+    });
+  });
+
+  // Highlight current section in TOC
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        document.querySelectorAll('nav a').forEach(link => {
+          if (link.getAttribute('href') === `#${id}`) {
+            if (link.classList.contains('text-sm')) {
+              // Main heading
+              link.classList.add('text-primary-600', 'bg-primary-50/50');
+            } else {
+              // Sub heading
+              link.classList.add('text-primary-600');
+            }
+          } else {
+            if (link.classList.contains('text-sm')) {
+              // Main heading
+              link.classList.remove('text-primary-600', 'bg-primary-50/50');
+            } else {
+              // Sub heading
+              link.classList.remove('text-primary-600');
+            }
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  // Observe all headings
+  document.querySelectorAll('h2, h3').forEach(heading => {
+    observer.observe(heading);
+  });
+</script>

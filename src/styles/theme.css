@@ -1,0 +1,172 @@
+:root {
+  /* Primary Color Palette - Minimal Navy Blue */
+  --color-primary-50: #f5f7fa;
+  --color-primary-100: #e4e9f2;
+  --color-primary-200: #d0d7e5;
+  --color-primary-300: #a6b5d3;
+  --color-primary-400: #7c93c0;
+  --color-primary-500: #5271ac;
+  --color-primary-600: #3e5a98;
+  --color-primary-700: #344c82;
+  --color-primary-800: #2a3d6d;
+  --color-primary-900: #1e2d55;
+
+  /* Secondary Color Palette - Soft Grey */
+  --color-secondary-50: #f8fafc;
+  --color-secondary-100: #f1f5f9;
+  --color-secondary-200: #e2e8f0;
+  --color-secondary-300: #cbd5e1;
+  --color-secondary-400: #94a3b8;
+  --color-secondary-500: #64748b;
+  --color-secondary-600: #475569;
+  --color-secondary-700: #334155;
+  --color-secondary-800: #1e293b;
+  --color-secondary-900: #0f172a;
+
+  /* Accent Color Palette - Muted Teal */
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
+
+  /* Neutral Color Palette */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Success, Warning, Error Colors */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-700: #b45309;
+
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-500: #ef4444;
+  --color-error-700: #b91c1c;
+
+  /* Component-specific variables */
+  
+  /* Card styles */
+  --card-bg-gradient-from: var(--color-primary-50);
+  --card-bg-gradient-to: var(--color-secondary-50);
+  --card-border-color: var(--color-secondary-200);
+  --card-icon-color: var(--color-primary-600);
+  --card-brutalism-border-color: var(--color-secondary-200);
+  
+  /* Button colors */
+  --button-primary-bg: var(--color-primary-600);
+  --button-primary-hover: var(--color-primary-700);
+  --button-secondary-bg: var(--color-secondary-600);
+  --button-secondary-hover: var(--color-secondary-700);
+  
+  /* Badge/Tag colors */
+  --badge-primary-bg: var(--color-primary-50);
+  --badge-primary-text: var(--color-primary-700);
+  --badge-secondary-bg: var(--color-secondary-50);
+  --badge-secondary-text: var(--color-secondary-700);
+  --badge-success-bg: var(--color-success-100);
+  --badge-success-text: var(--color-success-700);
+  --badge-warning-bg: var(--color-warning-100);
+  --badge-warning-text: var(--color-warning-700);
+  --badge-error-bg: var(--color-error-100);
+  --badge-error-text: var(--color-error-700);
+  
+  /* Filter button colors */
+  --filter-button-bg: var(--color-secondary-500);
+  --filter-button-hover: var(--color-secondary-600);
+  
+  /* Link colors */
+  --link-color: var(--color-primary-600);
+  --link-hover: var(--color-primary-700);
+}
+
+/* Theme specific classes for use with Tailwind */
+.card-gradient {
+  background-image: linear-gradient(to bottom right, var(--card-bg-gradient-from), var(--card-bg-gradient-to));
+  border-color: var(--card-border-color);
+}
+
+.card-brutalism {
+  border-right: 4px solid var(--card-brutalism-border-color);
+  border-bottom: 4px solid var(--card-brutalism-border-color);
+}
+
+.card-icon {
+  color: var(--card-icon-color);
+}
+
+.btn-primary {
+  background-color: var(--button-primary-bg);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-bg);
+}
+
+.btn-secondary:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.badge-primary {
+  background-color: var(--badge-primary-bg);
+  color: var(--badge-primary-text);
+}
+
+.badge-secondary {
+  background-color: var(--badge-secondary-bg);
+  color: var(--badge-secondary-text);
+}
+
+.badge-success {
+  background-color: var(--badge-success-bg);
+  color: var(--badge-success-text);
+}
+
+.badge-warning {
+  background-color: var(--badge-warning-bg);
+  color: var(--badge-warning-text);
+}
+
+.badge-error {
+  background-color: var(--badge-error-bg);
+  color: var(--badge-error-text);
+}
+
+.filter-button {
+  background-color: var(--filter-button-bg);
+}
+
+.filter-button:hover {
+  background-color: var(--filter-button-hover);
+}
+
+.link-color {
+  color: var(--link-color);
+}
+
+.link-color:hover {
+  color: var(--link-hover);
+}

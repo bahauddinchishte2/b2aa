@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://bangladesh2abroad.com/sitemap.xml
+Sitemap: https://bangladesh2abroad.com/sitemap-index.xml
+Sitemap: https://bangladesh2abroad.com/sitemap-blog.xml
+Sitemap: https://bangladesh2abroad.com/sitemap-pages.xml
+Sitemap: https://bangladesh2abroad.com/sitemap-resources.xml
+
+# Prevent duplicate content
+Disallow: /blog/page/
+Disallow: /scholarships/page/
+Disallow: /opportunities/page/
+Disallow: /resources/page/
+
+# Prevent indexing of search results
+Disallow: /search?*

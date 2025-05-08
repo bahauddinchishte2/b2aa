@@ -1,0 +1,143 @@
+---
+// This component shows the most recent opportunities
+const currentScholarships = [
+  {
+    title: "Example Scholarship 2024",
+    deadline: "2024-05-15",
+    country: "USA",
+    fundingType: "Full Fund",
+    levelOfStudy: "Master's",
+    href: "/scholarships/example-scholarship-2024",
+    category: "university-scholarship"
+  },
+  {
+    title: "DAAD Scholarship Germany 2024",
+    deadline: "2024-05-31",
+    country: "Germany", 
+    fundingType: "Full Fund",
+    levelOfStudy: "Master's",
+    href: "/scholarships/daad-scholarship-2024",
+    category: "government-scholarship"
+  },
+  {
+    title: "Korean Government Scholarship 2024",
+    deadline: "2024-03-31",
+    country: "South Korea",
+    fundingType: "Full Fund",
+    levelOfStudy: "Master's",
+    href: "/scholarships/korean-government-scholarship-2024",
+    category: "government-scholarship"
+  }
+];
+
+const currentOpportunities = [
+  {
+    title: "Google Summer Internship 2024",
+    deadline: "2024-03-15",
+    country: "Multiple Countries",
+    company: "Google",
+    fundingType: "Full Fund",
+    type: "Tech Internship",
+    href: "/opportunities/google-summer-internship-2024",
+    category: "internship"
+  },
+  {
+    title: "Microsoft Research Internship 2024",
+    deadline: "2024-03-31",
+    country: "United States",
+    company: "Microsoft",
+    fundingType: "Full Fund",
+    type: "Research Internship",
+    href: "/opportunities/microsoft-research-internship-2024",
+    category: "internship"
+  }
+];
+---
+
+<div class="space-y-12">
+  <!-- Scholarships Section -->
+  <section>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 mb-2 sm:mb-0">Latest Scholarships</h2>
+      <a href="/scholarships/all" class="text-primary-600 hover:text-primary-700 font-medium">
+        View All Scholarships →
+      </a>
+    </div>
+    <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {currentScholarships.map((scholarship) => (
+        <a href={scholarship.href} class="block group relative">
+          <div class="absolute bottom-0 right-0 w-full h-full border-r-4 border-b-4 border-primary-200 rounded-lg pointer-events-none -z-10 translate-x-1 translate-y-1"></div>
+          <div class="rounded-lg border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-shadow bg-white">
+            <span class="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full mb-3">
+              Currently Open
+            </span>
+            <h3 class="font-semibold text-[#3c5894] group-hover:text-primary-600 transition-colors">
+              {scholarship.title}
+            </h3>
+            <dl class="mt-4 space-y-2 text-sm text-gray-600">
+              <div class="flex justify-between">
+                <dt class="font-medium">Deadline:</dt>
+                <dd class="font-bold">{new Date(scholarship.deadline).toLocaleDateString()}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Country:</dt>
+                <dd>{scholarship.country}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Funding:</dt>
+                <dd>{scholarship.fundingType}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Level:</dt>
+                <dd>{scholarship.levelOfStudy}</dd>
+              </div>
+            </dl>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Other Opportunities Section -->
+  <section>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 mb-2 sm:mb-0">Latest Opportunities</h2>
+      <a href="/opportunities/current" class="text-primary-600 hover:text-primary-700 font-medium">
+        View Current Opportunities →
+      </a>
+    </div>
+    <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {currentOpportunities.map((internship) => (
+        <a href={internship.href} class="block group relative">
+          <div class="absolute bottom-0 right-0 w-full h-full border-r-4 border-b-4 border-primary-200 rounded-lg pointer-events-none -z-10 translate-x-1 translate-y-1"></div>
+          <div class="rounded-lg border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-shadow bg-white">
+            <span class="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full mb-3">
+              Currently Open
+            </span>
+            <h3 class="font-semibold text-[#3c5894] group-hover:text-primary-600 transition-colors">
+              {internship.title}
+            </h3>
+            <dl class="mt-4 space-y-2 text-sm text-gray-600">
+              <div class="flex justify-between">
+                <dt class="font-medium">Deadline:</dt>
+                <dd class="font-bold">{new Date(internship.deadline).toLocaleDateString()}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Country:</dt>
+                <dd>{internship.country}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Funding:</dt>
+                <dd>{internship.fundingType}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="font-medium">Type:</dt>
+                <dd>{internship.type}</dd>
+              </div>
+            </dl>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</div>

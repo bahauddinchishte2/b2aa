@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+import SearchBar from '../../components/SearchBar.astro';
+import FilterSystem from '../../components/FilterSystem.astro';
+import OpportunityCard from '../../components/OpportunityCard.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { category: 'internships' } },
+    { params: { category: 'fellowships' } },
+    { params: { category: 'current' } },
+  ];
+}
+
+const { category } = Astro.params;
+
+// Get all opportunities from the opportunities collection
+const allOpportunities = await getCollection('opportunities');
+const today = new Date();
+
+// Filter opportunities based on category and deadline
+const opportunities = allOpportunities.filter(post => {
+  const isCurrentlyOpen = new Date(post.data.deadline) >= today;
+  
+  if (category === 'current') {
+    return isCurrentlyOpen;
+  } else if (category === 'internships') {
+    return post.data.category === 'internship';
+  } else if (category === 'fellowships') {
+    return post.data.category === 'fellowship';
+  }
+  
+  return false;
+});
+
+// Get unique values for filters
+const countries = [...new Set(allOpportunities.map(post => post.data.country))];
+const levels = [...new Set(allOpportunities.map(post => post.data.levelOfStudy))];
+const fundingTypes = [...new Set(allOpportunities.map(post => post.data.fundingType))];
+
+const categoryTitles = {
+  internships: 'Internship Opportunities',
+  fellowships: 'Fellowship Opportunities',
+  current: 'Currently Open Opportunities',
+};
+
+// Prepare opportunities data for search
+const opportunitiesData = opportunities.map(post => ({
+  title: post.data.title,
+  country: post.data.country,
+  fundingType: post.data.fundingType,
+  levelOfStudy: post.data.levelOfStudy,
+  category: post.data.category,
+  tags: post.data.tags,
+  slug: post.slug
+}));
+---
+
+<Layout title={categoryTitles[category]}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">{categoryTitles[category]}</h1>
+    
+    <SearchBar />
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters -->
+      <aside class="lg:col-span-1 h-fit sticky top-24">
+        <FilterSystem 
+          filters={{
+            countries,
+            levels,
+            fundingTypes
+          }}
+        />
+      </aside>
+
+      <!-- Opportunities List -->
+      <div class="lg:col-span-3">
+        {opportunities.length > 0 ? (
+          <div class="space-y-6">
+            {opportunities.map(post => (
+              <div class="opportunity-card"
+                data-country={post.data.country}
+                data-level={post.data.levelOfStudy}
+                data-fundingType={post.data.fundingType}
+                data-tag={post.data.tags.join(',')}
+                data-category={post.data.category}
+                data-deadline={post.data.deadline}
+              >
+                <OpportunityCard 
+                  item={{
+                    title: post.data.title,
+                    slug: post.slug,
+                    hostInstitution: post.data.hostInstitution,
+                    country: post.data.country,
+                    fundingType: post.data.fundingType,
+                    deadline: post.data.deadline,
+                    category: post.data.category,
+                    openDate: post.data.openDate
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <p class="text-gray-600">No {category === 'current' ? 'currently open opportunities' : category} available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ opportunitiesData }}>
+  // Make opportunities data available for search
+  window.OPPORTUNITIES_DATA = opportunitiesData;
+</script>

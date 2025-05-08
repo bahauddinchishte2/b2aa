@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import OpportunityPost from '../../layouts/OpportunityPost.astro';
+
+export async function getStaticPaths() {
+  const opportunities = await getCollection('opportunities');
+  return opportunities.map(opportunity => ({
+    params: { slug: opportunity.slug },
+    props: opportunity,
+  }));
+}
+
+const opportunity = Astro.props;
+const { Content } = await opportunity.render();
+---
+
+<OpportunityPost frontmatter={opportunity.data}>
+  <Content />
+</OpportunityPost>

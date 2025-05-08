@@ -1,0 +1,125 @@
+---
+// TopSearchBar.astro - A compact search bar that can be added to the top of any page
+---
+
+<div class="w-full mb-8">
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+      </svg>
+    </div>
+    <input 
+      type="search" 
+      id="top-search-input"
+      class="w-full p-3 pl-10 text-sm text-gray-900 bg-white border-2 border-primary-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-200/50 focus:border-primary-300 transition-all duration-300"
+      placeholder="Filter opportunities on this page..."
+    />
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get all opportunity cards on the page
+    const allCards = document.querySelectorAll('.opportunity-card');
+    const searchInput = document.getElementById('top-search-input');
+    
+    if (!searchInput || allCards.length === 0) return;
+    
+    // Build searchable dataset from the cards on the page
+    const pageItems = Array.from(allCards).map(card => {
+      // Extract relevant info from the card
+      const titleEl = card.querySelector('h2, h3');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      
+      const country = card.getAttribute('data-country') || '';
+      const level = card.getAttribute('data-level') || '';
+      const fundingType = card.getAttribute('data-fundingType') || '';
+      const category = card.getAttribute('data-category') || '';
+      const tags = card.getAttribute('data-tag') || '';
+      
+      return {
+        element: card,
+        title,
+        country,
+        level,
+        fundingType,
+        category,
+        tags
+      };
+    });
+    
+    // Create simple search function for page items
+    function searchPageItems(query) {
+      if (!query) return pageItems; // Return all items if no query
+      
+      const lowerQuery = query.toLowerCase();
+      return pageItems.filter(item => {
+        // Check if any of the fields contain the query
+        return (
+          item.title.toLowerCase().includes(lowerQuery) ||
+          item.country.toLowerCase().includes(lowerQuery) ||
+          item.level.toLowerCase().includes(lowerQuery) ||
+          item.fundingType?.toLowerCase().includes(lowerQuery) ||
+          item.category?.toLowerCase().includes(lowerQuery) ||
+          item.tags?.toLowerCase().includes(lowerQuery)
+        );
+      });
+    }
+    
+    // Create a counter for showing results count
+    const resultCounter = document.createElement('div');
+    resultCounter.className = 'text-sm text-gray-500 mt-2 mb-4';
+    searchInput.parentNode.insertAdjacentElement('afterend', resultCounter);
+    
+    // Handle input in the search box
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim();
+      
+      const results = searchPageItems(query);
+      
+      // Show/hide cards based on search results
+      allCards.forEach(card => {
+        if (results.some(result => result.element === card)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Update the counter
+      if (query) {
+        resultCounter.textContent = `Showing ${results.length} of ${allCards.length} opportunities`;
+        resultCounter.style.display = 'block';
+      } else {
+        resultCounter.style.display = 'none';
+      }
+    });
+    
+    // Add a clear button and ensure it works properly
+    searchInput.addEventListener('search', () => {
+      if (!searchInput.value) {
+        // Show all cards when search is cleared
+        allCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        resultCounter.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Custom transition for card filtering */
+  .opportunity-card {
+    transition: all 0.3s ease;
+  }
+  
+  /* Remove browser's default search input styling */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+</style>

@@ -1,0 +1,161 @@
+---
+import Layout from './Layout.astro';
+import { format } from 'date-fns';
+import AuthorCard from '../components/AuthorCard.tsx';
+import GiscusComments from '../components/GiscusComments.tsx';
+import SocialShare from '../components/SocialShare.astro';
+
+const { frontmatter } = Astro.props;
+
+// Format date
+const formattedPublishDate = format(new Date(frontmatter.publishDate), 'MMMM d, yyyy');
+
+// Create article schema keywords
+const keywords = [
+  frontmatter.title,
+  'blog',
+  'Bangladesh to Abroad',
+  'study abroad',
+  ...frontmatter.tags
+];
+---
+
+<Layout 
+  title={frontmatter.title}
+  description={frontmatter.excerpt}
+  type="article"
+  contentType="blog"
+  publishDate={frontmatter.publishDate}
+  author={frontmatter.author}
+  keywords={keywords}
+>
+  <article class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+    <div class="mb-6 sm:mb-8 p-6 sm:p-8 bg-white rounded-xl shadow-lg border border-gray-200">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-gray-900">{frontmatter.title}</h1>
+      <div class="flex items-center text-gray-500 text-sm">
+        <span>Published on {formattedPublishDate}</span>
+        <span class="mx-2">•</span>
+        <span>By {frontmatter.author}</span>
+      </div>
+    </div>
+
+    {frontmatter.featuredImage && (
+      <div class="mb-8">
+        <img 
+          src={frontmatter.featuredImage}
+          alt={frontmatter.title}
+          class="w-full h-auto rounded-lg shadow-md"
+          width="800" 
+          height="450"
+          loading="lazy"
+        />
+      </div>
+    )}
+
+    <div class="mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
+      <div class="prose prose-lg max-w-none">
+        <!-- Wrapper div to hide the first h1 heading -->
+        <div class="first-heading-hidden">
+          <slot />
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="mt-8 mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">Tags</h2>
+      <div class="flex flex-wrap gap-2">
+        {frontmatter.tags.map((tag: string) => (
+          <a href={`/tags/${tag.toLowerCase().replace(/ /g, '-')}`} class="px-3 py-1 bg-gray-100 text-gray-600 hover:bg-primary-50 hover:text-primary-600 rounded-full text-sm transition-colors">
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <AuthorCard
+        client:only="react"
+        name={frontmatter.author}
+      />
+    </div>
+
+    <!-- Social Share Component -->
+    <SocialShare title={frontmatter.title} url={Astro.url.href} />
+
+    <div class="mt-8 bg-white rounded-lg border border-gray-200 p-6">
+      <h3 class="text-xl font-semibold mb-6">Comments</h3>
+      <GiscusComments client:only="react" />
+    </div>
+  </article>
+</Layout>
+
+<style is:global>
+  /* Hide the first h1 in the content */
+  .first-heading-hidden > h1:first-child {
+    display: none;
+  }
+
+  /* Typography */
+  .prose h1 {
+    @apply text-2xl sm:text-3xl font-bold mb-6 border-b border-gray-200 pb-3;
+  }
+  
+  .prose h2 {
+    @apply text-xl sm:text-2xl font-bold mb-4 text-gray-800 mt-8;
+  }
+  
+  .prose h3 {
+    @apply text-lg sm:text-xl font-bold mt-6 mb-3 text-gray-700;
+  }
+  
+  .prose p {
+    @apply my-4 text-gray-700 leading-relaxed text-sm sm:text-base;
+  }
+  
+  /* List styling */
+  .prose ul {
+    @apply my-6 pl-5 space-y-2 list-disc;
+  }
+  
+  .prose ol {
+    @apply my-6 pl-5 space-y-2 list-decimal;
+  }
+  
+  .prose li {
+    @apply mb-2 pl-2 text-sm sm:text-base;
+  }
+  
+  /* Blockquote styling */
+  .prose blockquote {
+    @apply italic border-l-4 border-primary-200 pl-4 py-2 my-6 text-gray-600;
+  }
+  
+  /* Link styling */
+  .prose a {
+    @apply text-primary-600 hover:text-primary-800 transition-colors;
+  }
+  
+  /* Code block styling */
+  .prose pre {
+    @apply bg-gray-50 p-3 sm:p-4 rounded-md overflow-x-auto my-6 border border-gray-100 text-sm;
+  }
+  
+  .prose code {
+    @apply bg-gray-50 px-1 py-0.5 rounded text-xs sm:text-sm text-gray-800;
+  }
+  
+  .prose pre code {
+    @apply bg-transparent px-0 py-0 text-sm sm:text-base;
+  }
+  
+  /* Horizontal rule */
+  .prose hr {
+    @apply my-8 border-t border-gray-200;
+  }
+  
+  /* Image styling */
+  .prose img {
+    @apply rounded-md mx-auto my-6 max-w-full;
+  }
+</style>

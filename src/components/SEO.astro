@@ -1,0 +1,367 @@
+---
+// SEO.astro - A comprehensive SEO component for Bangladesh to Abroad
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  image?: string;
+  type?: 'website' | 'article' | 'scholarship' | 'opportunity' | 'resource';
+  contentType?: 'blog' | 'scholarship' | 'opportunity' | 'resource';
+  publishDate?: string;
+  modifiedDate?: string;
+  author?: string;
+  twitterHandle?: string;
+  keywords?: string[];
+  noindex?: boolean;
+  nofollow?: boolean;
+  // Content-specific fields
+  scholarship?: {
+    deadline?: string;
+    fundingType?: string;
+    country?: string;
+    levelOfStudy?: string;
+    hostInstitution?: string;
+    category?: string;
+  };
+  opportunity?: {
+    deadline?: string;
+    fundingType?: string;
+    country?: string;
+    levelOfStudy?: string;
+    hostInstitution?: string;
+    category?: string;
+  };
+  resource?: {
+    area?: string;
+    category?: string;
+    lastUpdated?: string;
+  };
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.href,
+  image = '/images/og-default.jpg',
+  type = 'website',
+  contentType,
+  publishDate,
+  modifiedDate,
+  author,
+  twitterHandle = '@bangladeshtoabroad',
+  keywords = [],
+  noindex = false,
+  nofollow = false,
+  scholarship,
+  opportunity,
+  resource
+} = Astro.props;
+
+// Format dates for Schema.org
+const schemaPublishDate = publishDate ? new Date(publishDate).toISOString() : null;
+const schemaModifiedDate = modifiedDate ? new Date(modifiedDate).toISOString() : schemaPublishDate;
+
+// Build robots meta content
+const robotsContent = [
+  noindex ? 'noindex' : 'index',
+  nofollow ? 'nofollow' : 'follow'
+].join(', ');
+
+// Set default og image URL
+const ogImageUrl = image.startsWith('http') ? image : new URL(image, Astro.site).toString();
+
+// Prepare schema.org data based on content type
+let schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: canonical,
+  name: title,
+  description: description,
+  image: ogImageUrl,
+  inLanguage: 'en-US',
+};
+
+// Add specific schema data based on content type
+if (contentType === 'blog' || type === 'article') {
+  schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: description,
+    image: ogImageUrl,
+    url: canonical,
+    inLanguage: 'en-US',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical
+    },
+    ...(schemaPublishDate && { datePublished: schemaPublishDate }),
+    ...(schemaModifiedDate && { dateModified: schemaModifiedDate || schemaPublishDate }),
+    ...(author && {
+      author: {
+        '@type': 'Person',
+        name: author
+      }
+    }),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Bangladesh to Abroad',
+      logo: {
+        '@type': 'ImageObject',
+        url: new URL('/images/logo.svg', Astro.site).toString(),
+        width: 600,
+        height: 60
+      }
+    },
+    keywords: keywords.join(', ')
+  };
+} else if (contentType === 'scholarship' && scholarship) {
+  schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOccupationalCredential',
+    name: title,
+    description: description,
+    url: canonical,
+    image: ogImageUrl,
+    inLanguage: 'en-US',
+    ...(scholarship.deadline && { validUntil: new Date(scholarship.deadline).toISOString() }),
+    ...(scholarship.hostInstitution && { 
+      provider: {
+        '@type': 'Organization',
+        name: scholarship.hostInstitution
+      }
+    }),
+    ...(scholarship.levelOfStudy && { educationalLevel: scholarship.levelOfStudy }),
+    ...(scholarship.country && { 
+      offers: {
+        '@type': 'Offer',
+        offeredBy: {
+          '@type': 'Country',
+          name: scholarship.country
+        }
+      }
+    }),
+    ...(schemaPublishDate && { datePublished: schemaPublishDate }),
+    additionalType: 'Scholarship',
+    ...(author && {
+      author: {
+        '@type': 'Person',
+        name: author
+      }
+    })
+  };
+} else if (contentType === 'opportunity' && opportunity) {
+  // For internships and fellowships
+  schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: title,
+    description: description,
+    url: canonical,
+    datePosted: schemaPublishDate || new Date().toISOString(),
+    ...(opportunity.deadline && { validThrough: new Date(opportunity.deadline).toISOString() }),
+    ...(opportunity.hostInstitution && {
+      hiringOrganization: {
+        '@type': 'Organization',
+        name: opportunity.hostInstitution
+      }
+    }),
+    ...(opportunity.country && {
+      jobLocation: {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: opportunity.country
+        }
+      }
+    }),
+    employmentType: opportunity.category === 'internship' ? 'INTERN' : 'OTHER',
+    ...(opportunity.category === 'fellowship' && {
+      additionalType: 'Fellowship',
+      educationalLevel: opportunity.levelOfStudy
+    }),
+    ...(opportunity.fundingType && {
+      baseSalary: {
+        '@type': 'MonetaryAmount',
+        currency: 'USD',
+        value: {
+          '@type': 'QuantitativeValue',
+          value: opportunity.fundingType === 'Full Fund' ? 'Full funding provided' : 
+                opportunity.fundingType === 'Partial Fund' ? 'Partial funding provided' : 
+                'Funding details available in description'
+        }
+      }
+    })
+  };
+} else if (contentType === 'resource' && resource) {
+  schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: description,
+    image: ogImageUrl,
+    url: canonical,
+    inLanguage: 'en-US',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical
+    },
+    datePublished: schemaPublishDate || resource.lastUpdated || new Date().toISOString(),
+    dateModified: schemaModifiedDate || resource.lastUpdated || new Date().toISOString(),
+    ...(author && {
+      author: {
+        '@type': 'Person',
+        name: author
+      }
+    }),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Bangladesh to Abroad',
+      logo: {
+        '@type': 'ImageObject',
+        url: new URL('/images/logo.svg', Astro.site).toString(),
+        width: 600,
+        height: 60
+      }
+    },
+    about: resource.area,
+    articleSection: resource.category.replace(/-/g, ' '),
+    keywords: keywords.join(', ')
+  };
+}
+
+// Add BreadcrumbList schema 
+const pathParts = Astro.url.pathname.split('/').filter(Boolean);
+let breadcrumbData = null;
+
+if (pathParts.length > 0) {
+  const breadcrumbItems = [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      item: {
+        '@id': new URL('/', Astro.site).toString(),
+        name: 'Home'
+      }
+    }
+  ];
+
+  let currentPath = '';
+  
+  pathParts.forEach((part, index) => {
+    currentPath += `/${part}`;
+    const position = index + 2; // +2 because we started with Home at position 1
+    
+    let name = part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' ');
+    
+    // Handle special cases
+    if (part === 'scholarships' || part === 'opportunities' || part === 'resources' || part === 'blog') {
+      // These are section names, keep them as is (but capitalized)
+    } else if (pathParts[index - 1] === 'scholarships') {
+      name = 'Scholarship Details';
+    } else if (pathParts[index - 1] === 'opportunities') {
+      name = 'Opportunity Details';
+    } else if (pathParts[index - 1] === 'resources') {
+      name = 'Resource Guide';
+    } else if (pathParts[index - 1] === 'blog') {
+      name = 'Blog Post';
+    }
+    
+    breadcrumbItems.push({
+      '@type': 'ListItem',
+      position: position,
+      item: {
+        '@id': new URL(currentPath, Astro.site).toString(),
+        name: name
+      }
+    });
+  });
+  
+  breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbItems
+  };
+}
+
+// Organization schema for website entity
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': new URL('/', Astro.site).toString(),
+  name: 'Bangladesh to Abroad',
+  url: Astro.site?.toString(),
+  logo: new URL('/images/logo.svg', Astro.site).toString(),
+  description: 'Empowering Bangladeshi students with comprehensive information about international educational opportunities.',
+  sameAs: [
+    'https://www.facebook.com/bangladeshtoabroad',
+    'https://www.instagram.com/bangladeshtoabroad'
+  ]
+};
+
+// WebSite schema
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': new URL('/', Astro.site).toString() + '#website',
+  url: Astro.site?.toString(),
+  name: 'Bangladesh to Abroad',
+  description: 'Empowering Bangladeshi students with comprehensive information about international educational opportunities.',
+  publisher: {
+    '@id': new URL('/', Astro.site).toString()
+  }
+};
+---
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+
+<!-- Robots Meta Tag -->
+<meta name="robots" content={robotsContent} />
+
+<!-- Canonical Link -->
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type === 'article' || contentType === 'blog' ? 'article' : 'website'} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+{contentType === 'scholarship' && scholarship && (
+  <meta property="og:article:section" content="Scholarship" />
+)}
+{contentType === 'opportunity' && opportunity && (
+  <meta property="og:article:section" content="Opportunity" />
+)}
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonical} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={ogImageUrl} />
+{twitterHandle && <meta property="twitter:creator" content={twitterHandle} />}
+
+<!-- Schema.org - Main Entity -->
+<script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+<!-- Schema.org - Breadcrumbs -->
+{breadcrumbData && (
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
+)}
+
+<!-- Schema.org - Organization -->
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+<!-- Schema.org - Website -->
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
+<!-- Additional article metadata -->
+{publishDate && <meta property="article:published_time" content={new Date(publishDate).toISOString()} />}
+{modifiedDate && <meta property="article:modified_time" content={new Date(modifiedDate).toISOString()} />}
+{author && <meta property="article:author" content={author} />}

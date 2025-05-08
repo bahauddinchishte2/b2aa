@@ -1,0 +1,465 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Theme Customizer">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 sm:p-8">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-6">Theme Customizer</h1>
+      <p class="text-gray-600 mb-8">Use this page to customize the appearance of your website. Changes will be applied instantly and can be saved for future visits.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Color Customizer Section -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Color Schemes</h2>
+          
+          <!-- Preset Themes -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3">Preset Themes</h3>
+            <div class="flex flex-wrap gap-4">
+              <button id="theme-default" class="theme-preset-btn px-4 py-2 bg-emerald-100 border border-emerald-300 rounded-md hover:bg-emerald-200">
+                <span class="block w-6 h-6 rounded-full bg-emerald-500 mb-1 mx-auto"></span>
+                Default
+              </button>
+              <button id="theme-blue" class="theme-preset-btn px-4 py-2 bg-blue-100 border border-blue-300 rounded-md hover:bg-blue-200">
+                <span class="block w-6 h-6 rounded-full bg-blue-500 mb-1 mx-auto"></span>
+                Blue
+              </button>
+              <button id="theme-purple" class="theme-preset-btn px-4 py-2 bg-purple-100 border border-purple-300 rounded-md hover:bg-purple-200">
+                <span class="block w-6 h-6 rounded-full bg-purple-500 mb-1 mx-auto"></span>
+                Purple
+              </button>
+              <button id="theme-amber" class="theme-preset-btn px-4 py-2 bg-amber-100 border border-amber-300 rounded-md hover:bg-amber-200">
+                <span class="block w-6 h-6 rounded-full bg-amber-500 mb-1 mx-auto"></span>
+                Amber
+              </button>
+            </div>
+          </div>
+          
+          <!-- Primary Color -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3">Primary Color</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1" for="primary-500">Main Color</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="primary-500" class="w-10 h-10 rounded cursor-pointer" value="#059669">
+                  <input type="text" id="primary-500-hex" class="border rounded px-2 py-1 flex-grow" value="#059669">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="primary-100">Light Shade</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="primary-100" class="w-10 h-10 rounded cursor-pointer" value="#d1fae5">
+                  <input type="text" id="primary-100-hex" class="border rounded px-2 py-1 flex-grow" value="#d1fae5">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Secondary Color -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3">Secondary Color</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1" for="secondary-500">Main Color</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="secondary-500" class="w-10 h-10 rounded cursor-pointer" value="#3b82f6">
+                  <input type="text" id="secondary-500-hex" class="border rounded px-2 py-1 flex-grow" value="#3b82f6">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="secondary-100">Light Shade</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="secondary-100" class="w-10 h-10 rounded cursor-pointer" value="#dbeafe">
+                  <input type="text" id="secondary-100-hex" class="border rounded px-2 py-1 flex-grow" value="#dbeafe">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Component Customizer Section -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Component Styles</h2>
+          
+          <!-- Card Styles -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3">Card Style</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1" for="card-border-color">Border Color</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="card-border-color" class="w-10 h-10 rounded cursor-pointer" value="#a7f3d0">
+                  <input type="text" id="card-border-color-hex" class="border rounded px-2 py-1 flex-grow" value="#a7f3d0">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="card-icon-color">Icon Color</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="card-icon-color" class="w-10 h-10 rounded cursor-pointer" value="#047857">
+                  <input type="text" id="card-icon-color-hex" class="border rounded px-2 py-1 flex-grow" value="#047857">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Gradient Background -->
+            <div class="mt-4">
+              <p class="text-sm font-medium mb-1">Gradient Background</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs text-gray-500 mb-1" for="card-bg-gradient-from">From</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" id="card-bg-gradient-from" class="w-10 h-10 rounded cursor-pointer" value="#ecfdf5">
+                    <input type="text" id="card-bg-gradient-from-hex" class="border rounded px-2 py-1 flex-grow" value="#ecfdf5">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs text-gray-500 mb-1" for="card-bg-gradient-to">To</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" id="card-bg-gradient-to" class="w-10 h-10 rounded cursor-pointer" value="#eff6ff">
+                    <input type="text" id="card-bg-gradient-to-hex" class="border rounded px-2 py-1 flex-grow" value="#eff6ff">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Button Styles -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3">Button Colors</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1" for="button-primary-bg">Primary Button</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="button-primary-bg" class="w-10 h-10 rounded cursor-pointer" value="#047857">
+                  <input type="text" id="button-primary-bg-hex" class="border rounded px-2 py-1 flex-grow" value="#047857">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="filter-button-bg">Filter Button</label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="filter-button-bg" class="w-10 h-10 rounded cursor-pointer" value="#3b82f6">
+                  <input type="text" id="filter-button-bg-hex" class="border rounded px-2 py-1 flex-grow" value="#3b82f6">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Preview -->
+          <div class="mt-8">
+            <h3 class="text-lg font-medium mb-3">Preview</h3>
+            <div class="border rounded-lg p-4">
+              <div class="relative mb-4">
+                <div class="absolute bottom-0 right-0 w-full h-full card-brutalism rounded-lg pointer-events-none -z-10 translate-x-1 translate-y-1"></div>
+                <div class="card-gradient border border-[var(--card-border-color)] p-4 rounded-lg shadow-md">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="card-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                    </span>
+                    <h4 class="font-semibold">Sample Card</h4>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2">This is a preview of how your cards will look.</p>
+                  <div class="flex gap-2">
+                    <span class="badge-primary px-2 py-1 rounded-full text-xs">Tag 1</span>
+                    <span class="badge-secondary px-2 py-1 rounded-full text-xs">Tag 2</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex gap-3">
+                <button class="btn-primary text-white px-3 py-2 rounded-md">Primary Button</button>
+                <button class="filter-button text-white px-3 py-2 rounded-md">Filter Button</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="mt-10 flex justify-end gap-4">
+        <button id="reset-theme" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+          Reset to Default
+        </button>
+        <button id="save-theme" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Import the theme utilities
+  import { defaultTheme, themePresets, updateTheme } from '../config/theme';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize color pickers with current theme values
+    initializeColorPickers();
+    
+    // Handle hex input changes
+    setupHexInputs();
+    
+    // Handle preset theme buttons
+    setupPresetButtons();
+    
+    // Handle save and reset buttons
+    document.getElementById('save-theme')?.addEventListener('click', saveTheme);
+    document.getElementById('reset-theme')?.addEventListener('click', resetTheme);
+  });
+  
+  function initializeColorPickers() {
+    // Load saved theme or use default
+    const savedTheme = localStorage.getItem('site-theme');
+    const currentTheme = savedTheme ? JSON.parse(savedTheme) : defaultTheme;
+    
+    // Primary colors
+    setColorPickerValue('primary-500', getComputedStyle(document.documentElement).getPropertyValue('--color-primary-500').trim() || '#059669');
+    setColorPickerValue('primary-100', getComputedStyle(document.documentElement).getPropertyValue('--color-primary-100').trim() || '#d1fae5');
+    
+    // Secondary colors
+    setColorPickerValue('secondary-500', getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-500').trim() || '#3b82f6');
+    setColorPickerValue('secondary-100', getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-100').trim() || '#dbeafe');
+    
+    // Card styles
+    setColorPickerValue('card-border-color', getComputedStyle(document.documentElement).getPropertyValue('--card-border-color').trim() || '#a7f3d0');
+    setColorPickerValue('card-icon-color', getComputedStyle(document.documentElement).getPropertyValue('--card-icon-color').trim() || '#047857');
+    setColorPickerValue('card-bg-gradient-from', getComputedStyle(document.documentElement).getPropertyValue('--card-bg-gradient-from').trim() || '#ecfdf5');
+    setColorPickerValue('card-bg-gradient-to', getComputedStyle(document.documentElement).getPropertyValue('--card-bg-gradient-to').trim() || '#eff6ff');
+    
+    // Button colors
+    setColorPickerValue('button-primary-bg', getComputedStyle(document.documentElement).getPropertyValue('--button-primary-bg').trim() || '#047857');
+    setColorPickerValue('filter-button-bg', getComputedStyle(document.documentElement).getPropertyValue('--filter-button-bg').trim() || '#3b82f6');
+  }
+  
+  function setColorPickerValue(id, value) {
+    // Normalize the value to ensure it's a valid hex color
+    const normalizedValue = normalizeColorValue(value);
+    
+    // Set the color picker value
+    const colorPicker = document.getElementById(id);
+    if (colorPicker) {
+      colorPicker.value = normalizedValue;
+    }
+    
+    // Set the corresponding hex input value
+    const hexInput = document.getElementById(`${id}-hex`);
+    if (hexInput) {
+      hexInput.value = normalizedValue;
+    }
+  }
+  
+  function normalizeColorValue(value) {
+    // If value is a CSS variable reference, try to get the actual color
+    if (value.startsWith('var(--')) {
+      const variableName = value.match(/var\((.*?)\)/)?.[1];
+      if (variableName) {
+        value = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+      }
+    }
+    
+    // Ensure the value is a valid hex color
+    if (!value.startsWith('#')) {
+      value = '#' + value;
+    }
+    
+    // If it's still not valid, return a default
+    if (!/^#[0-9A-Fa-f]{6}$/.test(value)) {
+      // Parse RGB format if present
+      const rgbMatch = value.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (rgbMatch) {
+        const r = parseInt(rgbMatch[1]).toString(16).padStart(2, '0');
+        const g = parseInt(rgbMatch[2]).toString(16).padStart(2, '0');
+        const b = parseInt(rgbMatch[3]).toString(16).padStart(2, '0');
+        return `#${r}${g}${b}`;
+      }
+      return '#000000';
+    }
+    
+    return value;
+  }
+  
+  function setupHexInputs() {
+    // Add event listeners to all hex inputs
+    document.querySelectorAll('input[type="text"][id$="-hex"]').forEach(input => {
+      input.addEventListener('change', function() {
+        const colorPickerId = this.id.replace('-hex', '');
+        const colorPicker = document.getElementById(colorPickerId);
+        
+        // Validate and normalize hex value
+        let hexValue = this.value;
+        if (!hexValue.startsWith('#')) {
+          hexValue = '#' + hexValue;
+        }
+        
+        if (/^#[0-9A-Fa-f]{6}$/.test(hexValue)) {
+          // Valid hex - update color picker and apply change
+          colorPicker.value = hexValue;
+          applyColorChange(colorPickerId, hexValue);
+        } else {
+          // Invalid hex - reset to color picker value
+          this.value = colorPicker.value;
+        }
+      });
+    });
+    
+    // Add event listeners to color pickers
+    document.querySelectorAll('input[type="color"]').forEach(input => {
+      input.addEventListener('input', function() {
+        const hexInputId = this.id + '-hex';
+        const hexInput = document.getElementById(hexInputId);
+        
+        // Update hex input
+        hexInput.value = this.value;
+        
+        // Apply the color change
+        applyColorChange(this.id, this.value);
+      });
+    });
+  }
+  
+  function applyColorChange(id, value) {
+    // Apply the color to the CSS variable
+    const root = document.documentElement;
+    
+    if (id.startsWith('primary-')) {
+      const shade = id.split('-')[1];
+      root.style.setProperty(`--color-primary-${shade}`, value);
+    } 
+    else if (id.startsWith('secondary-')) {
+      const shade = id.split('-')[1];
+      root.style.setProperty(`--color-secondary-${shade}`, value);
+    }
+    else if (id === 'card-border-color') {
+      root.style.setProperty('--card-border-color', value);
+    }
+    else if (id === 'card-icon-color') {
+      root.style.setProperty('--card-icon-color', value);
+    }
+    else if (id === 'card-bg-gradient-from') {
+      root.style.setProperty('--card-bg-gradient-from', value);
+    }
+    else if (id === 'card-bg-gradient-to') {
+      root.style.setProperty('--card-bg-gradient-to', value);
+    }
+    else if (id === 'button-primary-bg') {
+      root.style.setProperty('--button-primary-bg', value);
+      root.style.setProperty('--button-primary-hover', adjustColorBrightness(value, -10));
+    }
+    else if (id === 'filter-button-bg') {
+      root.style.setProperty('--filter-button-bg', value);
+      root.style.setProperty('--filter-button-hover', adjustColorBrightness(value, -10));
+    }
+  }
+  
+  function adjustColorBrightness(hex, percent) {
+    // Convert hex to RGB
+    hex = hex.replace(/^#/, '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    
+    // Adjust brightness
+    r = Math.max(0, Math.min(255, r + percent));
+    g = Math.max(0, Math.min(255, g + percent));
+    b = Math.max(0, Math.min(255, b + percent));
+    
+    // Convert back to hex
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+  
+  function setupPresetButtons() {
+    document.getElementById('theme-default')?.addEventListener('click', () => {
+      applyPresetTheme(themePresets.default);
+    });
+    
+    document.getElementById('theme-blue')?.addEventListener('click', () => {
+      applyPresetTheme(themePresets.blue);
+    });
+    
+    document.getElementById('theme-purple')?.addEventListener('click', () => {
+      applyPresetTheme(themePresets.purple);
+    });
+    
+    document.getElementById('theme-amber')?.addEventListener('click', () => {
+      applyPresetTheme(themePresets.amber);
+    });
+  }
+  
+  function applyPresetTheme(theme) {
+    // Apply the theme
+    updateTheme(theme);
+    
+    // Update color pickers
+    initializeColorPickers();
+  }
+  
+  function saveTheme() {
+    // Collect current theme values
+    const theme = {
+      primary: {
+        '50': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-50').trim(),
+        '100': document.getElementById('primary-100').value,
+        '200': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-200').trim(),
+        '300': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-300').trim(),
+        '400': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-400').trim(),
+        '500': document.getElementById('primary-500').value,
+        '600': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-600').trim(),
+        '700': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-700').trim(),
+        '800': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-800').trim(),
+        '900': getComputedStyle(document.documentElement).getPropertyValue('--color-primary-900').trim()
+      },
+      secondary: {
+        '50': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-50').trim(),
+        '100': document.getElementById('secondary-100').value,
+        '200': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-200').trim(),
+        '300': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-300').trim(),
+        '400': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-400').trim(),
+        '500': document.getElementById('secondary-500').value,
+        '600': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-600').trim(),
+        '700': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-700').trim(),
+        '800': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-800').trim(),
+        '900': getComputedStyle(document.documentElement).getPropertyValue('--color-secondary-900').trim()
+      },
+      components: {
+        card: {
+          'border-color': document.getElementById('card-border-color').value,
+          'icon-color': document.getElementById('card-icon-color').value,
+          'bg-gradient-from': document.getElementById('card-bg-gradient-from').value,
+          'bg-gradient-to': document.getElementById('card-bg-gradient-to').value,
+          'brutalism-border-color': document.getElementById('card-border-color').value
+        },
+        button: {
+          'primary-bg': document.getElementById('button-primary-bg').value,
+          'primary-hover': adjustColorBrightness(document.getElementById('button-primary-bg').value, -10)
+        },
+        filter: {
+          'button-bg': document.getElementById('filter-button-bg').value,
+          'button-hover': adjustColorBrightness(document.getElementById('filter-button-bg').value, -10)
+        }
+      }
+    };
+    
+    // Save to localStorage
+    localStorage.setItem('site-theme', JSON.stringify(theme));
+    
+    // Show success message
+    alert('Theme settings saved successfully!');
+  }
+  
+  function resetTheme() {
+    // Apply default theme
+    updateTheme(defaultTheme);
+    
+    // Remove from localStorage
+    localStorage.removeItem('site-theme');
+    
+    // Update color pickers
+    initializeColorPickers();
+    
+    // Show message
+    alert('Theme has been reset to default!');
+  }
+</script>

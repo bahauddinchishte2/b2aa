@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ScholarshipPost from '../../layouts/ScholarshipPost.astro';
+
+export async function getStaticPaths() {
+  const scholarships = await getCollection('scholarships');
+  return scholarships.map(scholarship => ({
+    params: { slug: scholarship.slug },
+    props: scholarship,
+  }));
+}
+
+const scholarship = Astro.props;
+const { Content } = await scholarship.render();
+---
+
+<ScholarshipPost frontmatter={scholarship.data}>
+  <Content />
+</ScholarshipPost>

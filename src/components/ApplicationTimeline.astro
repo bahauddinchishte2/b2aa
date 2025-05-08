@@ -1,0 +1,114 @@
+---
+interface Props {
+  openDate: string;
+  deadline: string;
+  category: string;
+}
+
+const { openDate, deadline, category } = Astro.props;
+
+// Define timeline steps based on category
+const getTimelineSteps = (category: string) => {
+  const commonSteps = [
+    {
+      title: "Application Opens",
+      date: new Date(openDate).toLocaleDateString(),
+      icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />`,
+      description: "Start preparing your documents"
+    },
+    {
+      title: "Document Preparation",
+      icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />`,
+      description: "Gather and prepare required documents"
+    }
+  ];
+
+  const finalSteps = [
+    {
+      title: "Application Deadline",
+      date: new Date(deadline).toLocaleDateString(),
+      icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+      description: "Final date to submit your application"
+    }
+  ];
+
+  if (category.includes('scholarship')) {
+    return [
+      ...commonSteps,
+      {
+        title: "Language Tests",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />`,
+        description: "Take required language tests (IELTS/TOEFL)"
+      },
+      {
+        title: "Standardized Tests",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />`,
+        description: "Complete required tests (GRE/GMAT if needed)"
+      },
+      ...finalSteps,
+      {
+        title: "Visa Process",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />`,
+        description: "Begin visa application process if selected"
+      }
+    ];
+  } else if (category === 'internship') {
+    return [
+      ...commonSteps,
+      {
+        title: "Technical Assessment",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />`,
+        description: "Complete coding tests/assignments"
+      },
+      {
+        title: "Interviews",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />`,
+        description: "Technical and behavioral interviews"
+      },
+      ...finalSteps
+    ];
+  } else {
+    return [
+      ...commonSteps,
+      {
+        title: "Research Proposal",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />`,
+        description: "Submit detailed research proposal"
+      },
+      {
+        title: "Review Process",
+        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />`,
+        description: "Application review and evaluation"
+      },
+      ...finalSteps
+    ];
+  }
+};
+
+const timelineSteps = getTimelineSteps(category);
+---
+
+<div class="bg-white rounded-lg shadow-md p-6 mt-8">
+  <h2 class="text-xl font-semibold mb-6">Application Timeline</h2>
+  <div class="relative">
+    {timelineSteps.map((step, index) => (
+      <div class="flex items-start mb-8 last:mb-0">
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" set:html={step.icon} />
+        </div>
+        <div class="ml-4 flex-grow">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">{step.title}</h3>
+            {step.date && (
+              <span class="text-sm text-gray-500">{step.date}</span>
+            )}
+          </div>
+          <p class="mt-1 text-sm text-gray-600">{step.description}</p>
+        </div>
+        {index !== timelineSteps.length - 1 && (
+          <div class="absolute left-5 top-10 bottom-0 w-[2px] bg-primary-100"></div>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
