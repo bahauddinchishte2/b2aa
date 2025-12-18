@@ -43,13 +43,13 @@ const {
   title,
   description,
   canonical = Astro.url.href,
-  image = '/images/og-default.jpg',
+  image = '/images/og-image.jpeg',
   type = 'website',
   contentType,
   publishDate,
   modifiedDate,
   author,
-  twitterHandle = '@bangladeshtoabroad',
+  twitterHandle = '@bd2abroad',
   keywords = [],
   noindex = false,
   nofollow = false,
@@ -57,6 +57,10 @@ const {
   opportunity,
   resource
 } = Astro.props;
+
+const siteName = 'Bangladesh to Abroad';
+const siteUrl = 'https://bangladesh2abroad.com';
+const locale = 'en_BD';
 
 // Format dates for Schema.org
 const schemaPublishDate = publishDate ? new Date(publishDate).toISOString() : null;
@@ -332,6 +336,11 @@ const websiteSchema = {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content={locale} />
 {contentType === 'scholarship' && scholarship && (
   <meta property="og:article:section" content="Scholarship" />
 )}
@@ -340,12 +349,14 @@ const websiteSchema = {
 )}
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={canonical} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={ogImageUrl} />
-{twitterHandle && <meta property="twitter:creator" content={twitterHandle} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={twitterHandle} />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content={title} />
+{twitterHandle && <meta name="twitter:creator" content={twitterHandle} />}
 
 <!-- Schema.org - Main Entity -->
 <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />

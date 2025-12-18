@@ -1,4 +1,29 @@
+# Bangladesh to Abroad - Robots.txt
+# https://bangladesh2abroad.com
+
 User-agent: *
+Allow: /
+
+# Crawl delay to be nice to servers
+Crawl-delay: 1
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
 Allow: /
 
 # Sitemaps
@@ -8,11 +33,21 @@ Sitemap: https://bangladesh2abroad.com/sitemap-blog.xml
 Sitemap: https://bangladesh2abroad.com/sitemap-pages.xml
 Sitemap: https://bangladesh2abroad.com/sitemap-resources.xml
 
-# Prevent duplicate content
+# Prevent duplicate content indexing
 Disallow: /blog/page/
 Disallow: /scholarships/page/
 Disallow: /opportunities/page/
 Disallow: /resources/page/
 
-# Prevent indexing of search results
+# Prevent indexing of search results and internal pages
 Disallow: /search?*
+Disallow: /theme-customizer
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# Allow important assets
+Allow: /images/
+Allow: /favicon.svg
+Allow: /*.css
+Allow: /*.js
