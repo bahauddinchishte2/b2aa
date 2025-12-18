@@ -1,0 +1,21 @@
+{
+  "name": "Bangladesh to Abroad",
+  "short_name": "BD2Abroad",
+  "description": "Discover scholarships, fellowships, and internships for Bangladeshi students looking to study and work abroad",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006A4E",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "scholarships"],
+  "lang": "en",
+  "dir": "ltr"
+}

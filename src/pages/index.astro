@@ -69,14 +69,17 @@ const searchData = [
   description="Find scholarships, fellowships, internships and educational resources for Bangladeshi students looking to study and work abroad."
   keywords={["scholarships", "fellowships", "internships", "study abroad", "Bangladeshi students", "international education", "overseas education", "study opportunities"]}
 >
-  <!-- Hero Section with minimal background -->
+  <!-- Hero Section with background image -->
   <section class="relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-gray-50 to-secondary-50"></div>
-    
-    <!-- Subtle background elements -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div class="absolute top-[10%] right-[10%] w-64 h-64 bg-primary-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow"></div>
-      <div class="absolute bottom-[20%] left-[5%] w-72 h-72 bg-secondary-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" style="animation-delay: 1s;"></div>
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+      <img
+        src="https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        alt="Students studying"
+        class="w-full h-full object-cover"
+      />
+      <!-- Dark Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-900/85 via-primary-900/80 to-gray-900/85"></div>
     </div>
 
     <div class="min-h-[85vh] relative flex items-center justify-center pt-16 pb-20">
@@ -84,11 +87,11 @@ const searchData = [
         <!-- Main Hero Content -->
         <div class="max-w-4xl mx-auto">
           <div class="space-y-6 text-center">
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary-700 via-primary-600 to-secondary-600 bg-clip-text text-transparent leading-tight">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight drop-shadow-lg">
               Your Gateway to Global Opportunities
             </h1>
-            
-            <p class="text-lg sm:text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+
+            <p class="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
               Discover scholarships, fellowships, and internships for Bangladeshi students looking to study and work abroad.
             </p>
             
