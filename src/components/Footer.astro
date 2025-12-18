@@ -5,59 +5,129 @@ const contactInfo = {
   address: "Block J, Baridhara, Dhaka 1212, Bangladesh",
   email: "bangladesh2abroad@gmail.com"
 };
+
+const quickLinks = [
+  { name: "Scholarships", href: "/scholarships/all" },
+  { name: "Opportunities", href: "/opportunities/all" },
+  { name: "Resources", href: "/resources" },
+  { name: "Blog", href: "/blog" },
+];
+
+const companyLinks = [
+  { name: "About Us", href: "/about" },
+  { name: "Privacy Policy", href: "/privacy" },
+];
+
+const socialLinks = [
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/Bangladeshtogoabroad",
+    icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/bangladeshtoabroad",
+    icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`
+  },
+];
 ---
 
-<footer class="bg-gradient-to-br from-gray-900/95 via-primary-900/90 to-gray-900/95">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div class="col-span-1 md:col-span-2">
-        <h2 class="text-lg font-semibold text-white">Bangladesh to Abroad</h2>
-        <p class="mt-2 text-sm text-gray-300">
-          Empowering Bangladeshi students with comprehensive information about international opportunities.
+<footer class="bg-gradient-to-br from-gray-900/95 via-primary-900/90 to-gray-900/95 relative overflow-hidden">
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.03\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+      <div class="lg:col-span-5">
+        <a href="/" class="inline-flex items-center gap-3 group">
+          <div class="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-white">Bangladesh to Abroad</span>
+        </a>
+        <p class="mt-4 text-gray-300 leading-relaxed max-w-md">
+          Empowering Bangladeshi students with comprehensive information about international scholarships, opportunities, and resources for studying abroad.
         </p>
+
         <div class="mt-6 space-y-3">
           <div class="flex items-start gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-400 mt-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <p class="text-sm text-gray-300">{contactInfo.address}</p>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <p class="text-sm text-gray-300 pt-1">{contactInfo.address}</p>
           </div>
           <div class="flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <a href={`mailto:${contactInfo.email}`} class="text-sm text-gray-300 hover:text-primary-400">{contactInfo.email}</a>
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <a href={`mailto:${contactInfo.email}`} class="text-sm text-gray-300 hover:text-primary-400 transition-colors">{contactInfo.email}</a>
           </div>
         </div>
       </div>
-      <div>
-        <h3 class="text-sm font-semibold text-white">Quick Links</h3>
-        <ul class="mt-4 space-y-2">
-          <li>
-            <a href="/about" class="text-sm text-gray-300 hover:text-primary-400">About Us</a>
-          </li>
 
-          <li>
-            <a href="/privacy" class="text-sm text-gray-300 hover:text-primary-400">Privacy Policy</a>
-          </li>
+      <div class="lg:col-span-2">
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Explore</h3>
+        <ul class="mt-4 space-y-3">
+          {quickLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-sm text-gray-300 hover:text-white transition-colors inline-flex items-center gap-2 group">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
+                {link.name}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
-      <div>
-        <h3 class="text-sm font-semibold text-white">Follow Us</h3>
-        <ul class="mt-4 space-y-2">
-          <li>
-            <a href="https://www.facebook.com/Bangladeshtogoabroad" class="text-sm text-gray-300 hover:text-primary-400">Facebook</a>
-          </li>
-            <a href="https://www.instagram.com/bangladeshtoabroad" class="text-sm text-gray-300 hover:text-primary-400">Instagram</a>
-          </li>
+
+      <div class="lg:col-span-2">
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Company</h3>
+        <ul class="mt-4 space-y-3">
+          {companyLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-sm text-gray-300 hover:text-white transition-colors inline-flex items-center gap-2 group">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
+                {link.name}
+              </a>
+            </li>
+          ))}
         </ul>
+      </div>
+
+      <div class="lg:col-span-3">
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Stay Connected</h3>
+        <p class="mt-4 text-sm text-gray-300">Follow us for the latest updates on scholarships and opportunities.</p>
+        <div class="mt-4 flex gap-3">
+          {socialLinks.map((social) => (
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-gray-300 hover:bg-primary-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20"
+              aria-label={social.name}
+            >
+              <Fragment set:html={social.icon} />
+            </a>
+          ))}
+        </div>
       </div>
     </div>
-    <div class="mt-8 border-t border-white/20 pt-8">
-      <p class="text-sm text-gray-400 text-center">
-        © {currentYear} Bangladesh to Abroad. All rights reserved.
-      </p>
+
+    <div class="mt-12 pt-8 border-t border-white/10">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p class="text-sm text-gray-400">
+          &copy; {currentYear} Bangladesh to Abroad. All rights reserved.
+        </p>
+        <div class="flex items-center gap-6">
+          <a href="/privacy" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
+          <a href="/about" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
