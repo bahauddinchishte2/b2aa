@@ -184,7 +184,7 @@ const searchData = [
             Find the perfect avenue for your international education journey
           </p>
         </div>
-        
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             {
@@ -193,7 +193,8 @@ const searchData = [
               href: "/scholarships/all",
               icon: `<path d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998a12.078 12.078 0 01.665-6.479L12 14z" />`,
               color: "from-primary-500 to-primary-600",
-              count: scholarships.length
+              count: scholarships.length,
+              image: "https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=600"
             },
             {
               title: "Fellowships",
@@ -201,7 +202,8 @@ const searchData = [
               href: "/opportunities/fellowships",
               icon: `<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />`,
               color: "from-secondary-500 to-secondary-600",
-              count: opportunities.filter(o => o.data.category === 'fellowship').length
+              count: opportunities.filter(o => o.data.category === 'fellowship').length,
+              image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600"
             },
             {
               title: "Internships",
@@ -209,7 +211,8 @@ const searchData = [
               href: "/opportunities/internships",
               icon: `<path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />`,
               color: "from-accent-600 to-accent-700",
-              count: opportunities.filter(o => o.data.category === 'internship').length
+              count: opportunities.filter(o => o.data.category === 'internship').length,
+              image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600"
             },
             {
               title: "Resources",
@@ -217,16 +220,28 @@ const searchData = [
               href: "/resources",
               icon: `<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />`,
               color: "from-primary-600 to-secondary-600",
-              count: resources.length
+              count: resources.length,
+              image: "https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=600"
             }
           ].map((category) => (
             <a href={category.href} class="group relative">
               <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-md -m-1 pointer-events-none bg-gradient-to-r {category.color}"></div>
               <div class="relative h-full bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 group-hover:shadow-md transition-all duration-300">
-                <div class="p-6 h-full flex flex-col">
-                  <div class="mb-4 w-12 h-12 rounded-lg bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600 group-hover:text-primary-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" set:html={category.icon}></svg>
+                <div class="relative h-40 overflow-hidden">
+                  <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent z-10"></div>
+                  <img
+                    src={category.image}
+                    alt={category.title}
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    width="400"
+                    height="160"
+                    loading="lazy"
+                  />
+                  <div class="absolute top-3 left-3 z-20 w-10 h-10 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center text-primary-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" set:html={category.icon}></svg>
                   </div>
+                </div>
+                <div class="p-6 flex flex-col">
                   <h3 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                     {category.title}
                     {category.count > 0 && (
