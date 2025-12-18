@@ -146,7 +146,7 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     <meta name="geo.placename" content="Bangladesh" />
 
     <meta name="generator" content={Astro.generator} />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     
     <!-- Google Analytics -->
     <!-- Replace G-XXXXXXXXXX with your actual Google Analytics Tracking ID -->
@@ -236,7 +236,9 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     --accent: 136, 58, 234;
     --accent-light: 224, 204, 250;
     --accent-dark: 49, 10, 101;
-    font-family: 'Poppins', sans-serif;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-body);
     --accent-gradient: linear-gradient(
       45deg,
       rgb(var(--accent)),
@@ -244,7 +246,25 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
       white 60%
     );
   }
-  
+
+  body {
+    font-family: var(--font-body);
+  }
+
+  h1, h2 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  button, .btn, input, select, textarea {
+    font-family: var(--font-body);
+  }
+
   /* Add padding at the bottom for mobile devices to account for the bottom navigation */
   @media (max-width: 768px) {
     body {
