@@ -1,10 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
 import SearchBar from '../../components/SearchBar.astro';
 import FilterSystem from '../../components/FilterSystem.astro';
 import OpportunityCard from '../../components/OpportunityCard.astro';
+import { getAllScholarships } from '../../lib/content';
 
 export async function getStaticPaths() {
   return [
@@ -16,8 +16,7 @@ export async function getStaticPaths() {
 
 const { category } = Astro.params;
 
-// Get all scholarships from the scholarships collection
-const allScholarships = await getCollection('scholarships');
+const allScholarships = await getAllScholarships();
 const today = new Date();
 
 // Filter scholarships based on category

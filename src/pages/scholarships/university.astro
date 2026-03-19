@@ -1,17 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
 import TopSearchBar from '../../components/TopSearchBar.astro';
 import FilterSystem from '../../components/FilterSystem.astro';
 import OpportunityCard from '../../components/OpportunityCard.astro';
+import { getAllScholarships } from '../../lib/content';
 
-// Get all scholarships from the scholarships collection
-const allScholarships = await getCollection('scholarships');
+const allScholarships = await getAllScholarships();
 const today = new Date();
 
-// Filter scholarships with university-scholarship category
-const scholarships = allScholarships.filter(post => 
+const scholarships = allScholarships.filter(post =>
   post.data.category === 'university-scholarship'
 );
 

@@ -1,8 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
 import ResourceFilter from '../../components/ResourceFilter.astro';
+import { getAllResources } from '../../lib/content';
 export async function getStaticPaths() {
   return [
     { params: { category: 'study-guides' } },
@@ -14,8 +14,7 @@ export async function getStaticPaths() {
 
 const { category } = Astro.params;
 
-// Get all resources
-const allResources = await getCollection('resources');
+const allResources = await getAllResources();
 
 // Filter resources by category
 const resources = allResources.filter(resource => {

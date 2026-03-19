@@ -1,12 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
+import { getAllResources } from '../lib/content';
 
 export const GET: APIRoute = async ({ site }) => {
-  // Base URL from your site configuration
   const baseUrl = site?.toString() || 'https://bangladesh2abroad.com';
-  
-  // Get all resources
-  const resources = await getCollection('resources');
+  const resources = await getAllResources();
   
   // Generate sitemap entries for resources
   const entries = resources.map(resource => {

@@ -2,7 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
-import { getCollection } from 'astro:content';
+import { getAllScholarships, getAllOpportunities, getAllResources, getAllBlogPosts } from '../lib/content';
 import '../styles/theme.css';
 
 interface Props {
@@ -42,13 +42,13 @@ interface Props {
   };
 }
 
-// Get all content for search functionality
-const allScholarships = await getCollection('scholarships');
-const allOpportunities = await getCollection('opportunities');
-const allResources = await getCollection('resources');
-const allBlogPosts = await getCollection('blog');
+const [allScholarships, allOpportunities, allResources, allBlogPosts] = await Promise.all([
+  getAllScholarships(),
+  getAllOpportunities(),
+  getAllResources(),
+  getAllBlogPosts(),
+]);
 
-// Prepare search data
 const searchData = [
   ...allScholarships.map(post => ({
     title: post.data.title,

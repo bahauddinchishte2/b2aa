@@ -1,15 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
+import { getAllScholarships, getAllOpportunities, getAllResources } from '../lib/content';
 
-// Get query parameter
 const query = Astro.url.searchParams.get('q') || '';
 
-// Get all content collections
-const allScholarships = await getCollection('scholarships');
-const allOpportunities = await getCollection('opportunities');
-const allResources = await getCollection('resources');
+const [allScholarships, allOpportunities, allResources] = await Promise.all([
+  getAllScholarships(),
+  getAllOpportunities(),
+  getAllResources(),
+]);
 const today = new Date();
 
 // Function to highlight matching text
