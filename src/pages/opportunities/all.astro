@@ -1,13 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
 import TopSearchBar from '../../components/TopSearchBar.astro';
 import FilterSystem from '../../components/FilterSystem.astro';
 import OpportunityCard from '../../components/OpportunityCard.astro';
+import { getAllOpportunities } from '../../lib/content';
 
-// Get all opportunities
-const allOpportunities = await getCollection('opportunities');
+const allOpportunities = await getAllOpportunities();
 const today = new Date();
 
 // Get all possible unique values for filters

@@ -1,12 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
+import { getAllBlogPosts } from '../lib/content';
 
 export const GET: APIRoute = async ({ site }) => {
-  // Base URL from your site configuration
   const baseUrl = site?.toString() || 'https://bangladesh2abroad.com';
-  
-  // Get all blog posts
-  const blogPosts = await getCollection('blog');
+  const blogPosts = await getAllBlogPosts();
   
   // Generate sitemap entries for blog posts
   const entries = blogPosts.map(post => {

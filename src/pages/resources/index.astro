@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { format } from 'date-fns';
+import { getAllResources } from '../../lib/content';
 
-const allResources = await getCollection('resources');
+const allResources = await getAllResources();
 
 // Group resources by category
 const resourcesByCategory = allResources.reduce((acc, resource) => {

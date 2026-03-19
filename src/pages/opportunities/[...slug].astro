@@ -1,19 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
+import { getAllOpportunities, getOpportunityContent } from '../../lib/content';
 import OpportunityPost from '../../layouts/OpportunityPost.astro';
+import PortableText from '../../components/PortableText.astro';
 
 export async function getStaticPaths() {
-  const opportunities = await getCollection('opportunities');
+  const opportunities = await getAllOpportunities();
   return opportunities.map(opportunity => ({
     params: { slug: opportunity.slug },
-    props: opportunity,
+    props: { slug: opportunity.slug },
   }));
 }
 
-const opportunity = Astro.props;
-const { Content } = await opportunity.render();
+const { slug } = Astro.props;
+const opportunity = await getOpportunityContent(slug);
+
+if (!opportunity) {
+  return Astro.redirect('/opportunities/all');
+}
+
+let Content: any = null;
+if (opportunity.source === 'mdx' && opportunity.render) {
+  const rendered = await opportunity.render();
+  Content = rendered.Content;
+}
 ---
 
 <OpportunityPost frontmatter={opportunity.data}>
-  <Content />
+  {opportunity.source === 'sanity' && opportunity.sanityBody ? (
+    <PortableText value={opportunity.sanityBody} />
+  ) : Content ? (
+    <Content />
+  ) : null}
 </OpportunityPost>

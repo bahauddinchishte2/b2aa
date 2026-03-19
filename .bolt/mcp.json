@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "sanity_mcp": {
+      "enabled": true
+    }
+  }
+}

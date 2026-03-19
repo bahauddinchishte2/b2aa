@@ -1,13 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
-import { getCollection } from 'astro:content';
+import { getAllScholarships, getAllOpportunities, getAllResources, getAllBlogPosts } from '../lib/content';
 
-// Get collections for featured content and counts
-const scholarships = await getCollection('scholarships');
-const opportunities = await getCollection('opportunities');
-const resources = await getCollection('resources');
-const blogPosts = await getCollection('blog');
+const [scholarships, opportunities, resources, blogPosts] = await Promise.all([
+  getAllScholarships(),
+  getAllOpportunities(),
+  getAllResources(),
+  getAllBlogPosts(),
+]);
 
 // Calculate stats for the stats section
 const openScholarships = scholarships.filter(s => new Date(s.data.deadline) >= new Date()).length;

@@ -1,0 +1,110 @@
+---
+import { sanityImageUrl } from '../lib/sanity';
+
+interface Props {
+  value: any[];
+}
+
+const { value } = Astro.props;
+
+function renderBlock(block: any): string {
+  if (!block) return '';
+
+  if (block._type === 'image') {
+    const url = block.asset?._ref ? sanityImageUrl(block.asset._ref) : '';
+    const alt = block.alt || '';
+    return url ? `<img src="${url}" alt="${alt}" class="rounded-md mx-auto my-6 max-w-full" loading="lazy" />` : '';
+  }
+
+  if (block._type !== 'block') return '';
+
+  const children = (block.children || [])
+    .map((child: any) => {
+      let text = escapeHtml(child.text || '');
+      if (!text) return '';
+      const marks = child.marks || [];
+      for (const mark of marks) {
+        if (mark === 'strong') text = `<strong>${text}</strong>`;
+        else if (mark === 'em') text = `<em>${text}</em>`;
+        else if (mark === 'underline') text = `<u>${text}</u>`;
+        else if (mark === 'strike-through') text = `<s>${text}</s>`;
+        else if (mark === 'code') text = `<code>${text}</code>`;
+        else {
+          const markDef = (block.markDefs || []).find((m: any) => m._key === mark);
+          if (markDef?._type === 'link') {
+            text = `<a href="${escapeHtml(markDef.href || '')}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+          }
+        }
+      }
+      return text;
+    })
+    .join('');
+
+  const style = block.style || 'normal';
+  switch (style) {
+    case 'h1': return `<h1>${children}</h1>`;
+    case 'h2': return `<h2>${children}</h2>`;
+    case 'h3': return `<h3>${children}</h3>`;
+    case 'h4': return `<h4>${children}</h4>`;
+    case 'blockquote': return `<blockquote>${children}</blockquote>`;
+    default: return `<p>${children}</p>`;
+  }
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderBlocks(blocks: any[]): string {
+  if (!blocks || !Array.isArray(blocks)) return '';
+
+  let html = '';
+  let listType: string | null = null;
+
+  for (const block of blocks) {
+    if (block._type === 'block' && block.listItem) {
+      const newListType = block.listItem === 'number' ? 'ol' : 'ul';
+      if (listType !== newListType) {
+        if (listType) html += `</${listType}>`;
+        html += `<${newListType}>`;
+        listType = newListType;
+      }
+      const children = (block.children || [])
+        .map((child: any) => {
+          let text = escapeHtml(child.text || '');
+          const marks = child.marks || [];
+          for (const mark of marks) {
+            if (mark === 'strong') text = `<strong>${text}</strong>`;
+            else if (mark === 'em') text = `<em>${text}</em>`;
+            else {
+              const markDef = (block.markDefs || []).find((m: any) => m._key === mark);
+              if (markDef?._type === 'link') {
+                text = `<a href="${escapeHtml(markDef.href || '')}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+              }
+            }
+          }
+          return text;
+        })
+        .join('');
+      html += `<li>${children}</li>`;
+    } else {
+      if (listType) {
+        html += `</${listType}>`;
+        listType = null;
+      }
+      html += renderBlock(block);
+    }
+  }
+
+  if (listType) html += `</${listType}>`;
+  return html;
+}
+
+const renderedHtml = renderBlocks(value || []);
+---
+
+<div class="prose prose-lg max-w-none" set:html={renderedHtml} />

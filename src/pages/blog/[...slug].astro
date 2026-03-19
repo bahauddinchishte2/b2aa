@@ -1,19 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
+import { getAllBlogPosts, getBlogPostContent } from '../../lib/content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import PortableText from '../../components/PortableText.astro';
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection('blog');
+  const blogEntries = await getAllBlogPosts();
   return blogEntries.map(entry => ({
     params: { slug: entry.slug },
-    props: { entry },
+    props: { slug: entry.slug },
   }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { slug } = Astro.props;
+const entry = await getBlogPostContent(slug);
+
+if (!entry) {
+  return Astro.redirect('/blog');
+}
+
+let Content: any = null;
+if (entry.source === 'mdx' && entry.render) {
+  const rendered = await entry.render();
+  Content = rendered.Content;
+}
 ---
 
 <BlogPost frontmatter={entry.data}>
-  <Content />
+  {entry.source === 'sanity' && entry.sanityBody ? (
+    <PortableText value={entry.sanityBody} />
+  ) : Content ? (
+    <Content />
+  ) : null}
 </BlogPost>

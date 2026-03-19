@@ -1,19 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
+import { getAllScholarships, getScholarshipContent } from '../../lib/content';
 import ScholarshipPost from '../../layouts/ScholarshipPost.astro';
+import PortableText from '../../components/PortableText.astro';
 
 export async function getStaticPaths() {
-  const scholarships = await getCollection('scholarships');
+  const scholarships = await getAllScholarships();
   return scholarships.map(scholarship => ({
     params: { slug: scholarship.slug },
-    props: scholarship,
+    props: { slug: scholarship.slug },
   }));
 }
 
-const scholarship = Astro.props;
-const { Content } = await scholarship.render();
+const { slug } = Astro.props;
+const scholarship = await getScholarshipContent(slug);
+
+if (!scholarship) {
+  return Astro.redirect('/scholarships/all');
+}
+
+let Content: any = null;
+if (scholarship.source === 'mdx' && scholarship.render) {
+  const rendered = await scholarship.render();
+  Content = rendered.Content;
+}
 ---
 
 <ScholarshipPost frontmatter={scholarship.data}>
-  <Content />
+  {scholarship.source === 'sanity' && scholarship.sanityBody ? (
+    <PortableText value={scholarship.sanityBody} />
+  ) : Content ? (
+    <Content />
+  ) : null}
 </ScholarshipPost>

@@ -1,19 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
+import { getAllResources, getResourceContent } from '../../lib/content';
 import ResourceBlog from '../../layouts/ResourceBlog.astro';
+import PortableText from '../../components/PortableText.astro';
 
 export async function getStaticPaths() {
-  const resources = await getCollection('resources');
+  const resources = await getAllResources();
   return resources.map(resource => ({
     params: { slug: resource.slug },
-    props: resource,
+    props: { slug: resource.slug },
   }));
 }
 
-const resource = Astro.props;
-const { Content } = await resource.render();
+const { slug } = Astro.props;
+const resource = await getResourceContent(slug);
+
+if (!resource) {
+  return Astro.redirect('/resources');
+}
+
+let Content: any = null;
+if (resource.source === 'mdx' && resource.render) {
+  const rendered = await resource.render();
+  Content = rendered.Content;
+}
 ---
 
 <ResourceBlog frontmatter={resource.data}>
-  <Content />
+  {resource.source === 'sanity' && resource.sanityBody ? (
+    <PortableText value={resource.sanityBody} />
+  ) : Content ? (
+    <Content />
+  ) : null}
 </ResourceBlog>
