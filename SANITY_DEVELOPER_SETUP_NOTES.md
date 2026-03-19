@@ -22,6 +22,7 @@ This document records every decision, configuration detail, and architectural ch
 12. [Key Files Reference](#key-files-reference)
 13. [Common Tasks](#common-tasks)
 14. [Things to Keep in Mind](#things-to-keep-in-mind)
+15. [Webhook Configuration](#webhook-configuration)
 
 ---
 
@@ -304,10 +305,52 @@ Go to sanity.io > Project > Usage tab to monitor CDN requests and bandwidth.
 
 6. **The slug format matters.** Sanity slugs are stored as `{ current: "my-slug" }`. The GROQ queries use `"slug": slug.current` to flatten this. The normalizer also handles both `string` and `{ current: string }` formats defensively.
 
-7. **No webhook/auto-rebuild is configured yet.** After publishing content in Sanity, you need to manually trigger a site rebuild. Consider adding a Sanity webhook that triggers a build on your hosting platform (Vercel, Netlify, etc.) for automatic deploys on content change.
+7. **Automatic rebuilds are configured via a Sanity webhook.** See the [Webhook Configuration](#webhook-configuration) section below for full details.
 
 8. **The migration script** (`src/scripts/migrate-content.js`) was a one-time utility to reorganize MDX files from a flat `blog/` directory into separate `scholarships/` and `opportunities/` directories based on their category frontmatter. It does not need to be run again.
 
 9. **Sanity's API version is locked to `2024-01-01`**. This prevents breaking changes from newer API versions. Only update this if you have tested against a newer version.
 
 10. **Images from Sanity are served from cdn.sanity.io.** They are not downloaded or processed by Astro. This keeps build times fast and avoids storing images in the repo.
+
+---
+
+## Webhook Configuration
+
+A Sanity webhook is configured to automatically trigger a Netlify site rebuild whenever content changes in the production dataset. This means you no longer need to manually trigger deploys after publishing content.
+
+### Webhook Details
+
+| Setting | Value |
+|---|---|
+| Name | Netlify Deploy |
+| URL | `https://api.netlify.com/build_hooks/69bc7444de74b7b7be6cc210` |
+| Dataset | `production` |
+| Trigger on | Create, Update, Delete |
+| HTTP method | POST |
+| API version | v2021-03-25 |
+| Drafts | Disabled (drafts do not trigger builds) |
+| Versions | Disabled |
+| Status | Enabled |
+
+### Recommended Filter
+
+Add the following GROQ filter to avoid unnecessary rebuilds from non-content document changes (e.g., image assets, internal Sanity documents):
+
+```groq
+_type in ["scholarship", "opportunity", "blogPost", "resource"]
+```
+
+### How It Works
+
+1. An editor creates, updates, or deletes a published document in Sanity Studio.
+2. Sanity sends a POST request to the Netlify build hook URL.
+3. Netlify triggers a new production build of the Astro site.
+4. The build fetches fresh content from Sanity's CDN and generates updated static HTML.
+5. Netlify deploys the new build automatically.
+
+### Important Notes
+
+- The build hook URL is specific to the Netlify site. If the site is moved to a different Netlify project, a new build hook must be generated and the webhook URL updated in Sanity.
+- Draft changes do NOT trigger rebuilds. Only published content triggers the webhook.
+- If you need to pause automatic deploys temporarily (e.g., during a large content migration), disable the webhook in Sanity under API > Webhooks.
