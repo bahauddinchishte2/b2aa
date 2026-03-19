@@ -41,13 +41,14 @@ const keywords = [
 
     {frontmatter.featuredImage && (
       <div class="mb-8">
-        <img 
+        <img
           src={frontmatter.featuredImage}
           alt={frontmatter.title}
           class="w-full h-auto rounded-lg shadow-md"
-          width="800" 
+          width="800"
           height="450"
-          loading="lazy"
+          fetchpriority="high"
+          decoding="async"
         />
       </div>
     )}

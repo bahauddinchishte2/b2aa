@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getAllResources } from '../lib/content';
 
 export const GET: APIRoute = async ({ site }) => {
-  const baseUrl = site?.toString() || 'https://bangladesh2abroad.com';
+  const baseUrl = (site?.toString() || 'https://bangladesh2abroad.com').replace(/\/$/, '');
   const resources = await getAllResources();
   
   // Generate sitemap entries for resources

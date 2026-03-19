@@ -116,10 +116,13 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-BD">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <link rel="dns-prefetch" href="https://images.pexels.com" />
+    <link rel="dns-prefetch" href="https://api.dicebear.com" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -130,6 +133,9 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     <meta name="theme-color" content="#006A4E" />
     <meta name="msapplication-TileColor" content="#006A4E" />
     <meta name="msapplication-TileImage" content="/favicon.svg" />
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="Bangladesh to Abroad RSS Feed" href="/rss.xml" />
 
     <!-- Additional SEO Meta Tags -->
     <meta name="author" content="Bangladesh to Abroad" />
@@ -146,16 +152,19 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     <meta name="geo.placename" content="Bangladesh" />
 
     <meta name="generator" content={Astro.generator} />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
-    
-    <!-- Google Analytics -->
-    <!-- Replace G-XXXXXXXXXX with your actual Google Analytics Tracking ID -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" /></noscript>
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D6YBDD7R2Y"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-D6YBDD7R2Y');
+      gtag('config', 'G-D6YBDD7R2Y', { send_page_view: true });
     </script>
     
     <!-- SEO Component -->
