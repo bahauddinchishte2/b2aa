@@ -70,8 +70,9 @@ export default defineConfig({
   },
   // Optimize output
   compressHTML: true,
+  trailingSlash: 'never',
   build: {
-    format: 'file',
+    format: 'directory',
     assets: 'assets'
   },
   // Prevent memory issues with MDX content
