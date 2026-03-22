@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ site }) => {
   // Base URL from your site configuration
-  const baseUrl = site?.toString() || 'https://bangladesh2abroad.com';
+  const baseUrl = (site?.toString() || 'https://bangladesh2abroad.com').replace(/\/$/, '');
   
   // Current date in W3C format (used for lastmod)
   const currentDate = new Date().toISOString();
@@ -19,7 +19,19 @@ export const GET: APIRoute = async ({ site }) => {
         <lastmod>${currentDate}</lastmod>
       </sitemap>
       <sitemap>
+        <loc>${baseUrl}/sitemap-scholarships.xml</loc>
+        <lastmod>${currentDate}</lastmod>
+      </sitemap>
+      <sitemap>
+        <loc>${baseUrl}/sitemap-opportunities.xml</loc>
+        <lastmod>${currentDate}</lastmod>
+      </sitemap>
+      <sitemap>
         <loc>${baseUrl}/sitemap-resources.xml</loc>
+        <lastmod>${currentDate}</lastmod>
+      </sitemap>
+      <sitemap>
+        <loc>${baseUrl}/sitemap-news.xml</loc>
         <lastmod>${currentDate}</lastmod>
       </sitemap>
     </sitemapindex>`,

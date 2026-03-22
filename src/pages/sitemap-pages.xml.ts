@@ -4,6 +4,8 @@ import type { APIRoute } from 'astro';
 const staticPages = [
   '',
   'about',
+  'privacy',
+  'search',
   'blog',
   'resources',
   'resources/country-guides',
@@ -22,7 +24,7 @@ const staticPages = [
 
 export const GET: APIRoute = async ({ site }) => {
   // Base URL from your site configuration
-  const baseUrl = site?.toString() || 'https://bangladesh2abroad.com';
+  const baseUrl = (site?.toString() || 'https://bangladesh2abroad.com').replace(/\/$/, '');
   
   // Current date in W3C format (used for lastmod)
   const currentDate = new Date().toISOString();

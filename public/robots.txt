@@ -4,12 +4,14 @@
 User-agent: *
 Allow: /
 
-# Crawl delay to be nice to servers
-Crawl-delay: 1
-
-# Allow all major search engines
 User-agent: Googlebot
 Allow: /
+
+User-agent: Googlebot-News
+Allow: /blog/
+Allow: /scholarships/
+Allow: /opportunities/
+Allow: /resources/
 
 User-agent: Bingbot
 Allow: /
@@ -27,11 +29,8 @@ User-agent: YandexBot
 Allow: /
 
 # Sitemaps
-Sitemap: https://bangladesh2abroad.com/sitemap.xml
 Sitemap: https://bangladesh2abroad.com/sitemap-index.xml
-Sitemap: https://bangladesh2abroad.com/sitemap-blog.xml
-Sitemap: https://bangladesh2abroad.com/sitemap-pages.xml
-Sitemap: https://bangladesh2abroad.com/sitemap-resources.xml
+Sitemap: https://bangladesh2abroad.com/sitemap-news.xml
 
 # Prevent duplicate content indexing
 Disallow: /blog/page/
