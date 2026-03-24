@@ -29,7 +29,7 @@ User-agent: YandexBot
 Allow: /
 
 # Sitemaps
-Sitemap: https://bangladesh2abroad.com/sitemap-index.xml
+Sitemap: https://bangladesh2abroad.com/sitemap.xml
 Sitemap: https://bangladesh2abroad.com/sitemap-news.xml
 
 # Prevent duplicate content indexing

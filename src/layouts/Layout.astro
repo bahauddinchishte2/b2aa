@@ -156,8 +156,8 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet" /></noscript>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D6YBDD7R2Y"></script>
     <script>
@@ -196,6 +196,129 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
       <slot />
     </main>
     <Footer />
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="display:none;"></div>
+    <button
+      id="translate-btn"
+      aria-label="Translate to Bangla"
+      title="Translate to Bangla"
+      class="fixed bottom-20 md:bottom-6 right-4 z-[80] h-11 px-3 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 hover:shadow-xl transition-all duration-200 group translate-btn-expanded"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600 group-hover:text-primary-600 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      </svg>
+      <span class="translate-btn-label text-xs font-medium text-gray-600 group-hover:text-primary-600" id="translate-btn-text">বাংলা</span>
+    </button>
+
+    <script is:inline>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'bn,en',
+          autoDisplay: false
+        }, 'google_translate_element');
+      }
+
+      (function() {
+        var btn = document.getElementById('translate-btn');
+        var btnText = document.getElementById('translate-btn-text');
+        var scriptLoaded = false;
+        var isBangla = false;
+
+        window.triggerTranslateToggle = function() {
+          if (!scriptLoaded) {
+            scriptLoaded = true;
+            var s = document.createElement('script');
+            s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            s.onload = function() {
+              setTimeout(doTranslate, 1000);
+            };
+            document.body.appendChild(s);
+          } else {
+            doTranslate();
+          }
+        };
+
+        btn.addEventListener('click', function() {
+          window.triggerTranslateToggle();
+        });
+
+        function doTranslate() {
+          var sel = document.querySelector('#google_translate_element select');
+          if (sel) {
+            var targetLang = isBangla ? 'en' : 'bn';
+            sel.value = targetLang;
+            sel.dispatchEvent(new Event('change'));
+            isBangla = !isBangla;
+            updateState();
+          }
+        }
+
+        function updateState() {
+          var html = document.documentElement;
+          if (isBangla) {
+            html.classList.add('translated-bn');
+            btnText.textContent = 'English';
+            btn.setAttribute('aria-label', 'Switch to English');
+            btn.setAttribute('title', 'Switch to English');
+          } else {
+            html.classList.remove('translated-bn');
+            btnText.textContent = 'বাংলা';
+            btn.setAttribute('aria-label', 'Translate to Bangla');
+            btn.setAttribute('title', 'Translate to Bangla');
+          }
+        }
+      })();
+    </script>
+
+    <style is:global>
+      .goog-te-banner-frame, .skiptranslate {
+        display: none !important;
+      }
+      body {
+        top: 0 !important;
+      }
+
+      .translated-bn body,
+      .translated-bn *:not(code):not(pre):not(.notranslate) {
+        font-family: 'Hind Siliguri', 'Inter', system-ui, sans-serif !important;
+      }
+
+      .translated-bn h1,
+      .translated-bn h2 {
+        font-family: 'Hind Siliguri', 'Lexend', system-ui, sans-serif !important;
+      }
+
+      .translated-bn .prose {
+        line-height: 1.85 !important;
+      }
+
+      .translated-bn .prose p,
+      .translated-bn .prose li {
+        line-height: 1.9 !important;
+      }
+
+      .translated-bn .prose h2,
+      .translated-bn .prose h3 {
+        line-height: 1.4 !important;
+      }
+
+      .translate-btn-label {
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: max-width 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+        margin-left: 0;
+      }
+
+      .translate-btn-expanded .translate-btn-label {
+        max-width: 120px;
+        opacity: 1;
+        margin-left: 6px;
+      }
+    </style>
 
     <!-- Theme switcher initialization script -->
     <script>
@@ -247,6 +370,7 @@ const pageTitle = isHomePage ? 'Bangladesh to Abroad' : `${title} | Bangladesh t
     --accent-dark: 49, 10, 101;
     --font-heading: 'Lexend', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
+    --font-bangla: 'Hind Siliguri', system-ui, sans-serif;
     font-family: var(--font-body);
     --accent-gradient: linear-gradient(
       45deg,
