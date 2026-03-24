@@ -6,6 +6,7 @@ export default {
       fontFamily: {
         heading: ['Lexend', 'system-ui', 'sans-serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
+        bangla: ['Hind Siliguri', 'system-ui', 'sans-serif'],
       },
       colors: {
         // Minimal navy blue palette
