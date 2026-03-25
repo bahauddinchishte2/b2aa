@@ -393,6 +393,89 @@ const countries = [
     </div>
   </section>
 
+  <!-- ===== JOIN COMMUNITY ===== -->
+  <section class="bg-white py-14 px-4 sm:px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden">
+        <div class="flex flex-col lg:flex-row">
+
+          <!-- Left: image with overlay -->
+          <div class="lg:w-5/12 relative min-h-[300px] lg:min-h-0">
+            <img
+              src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800"
+              alt="Students collaborating and discussing opportunities"
+              class="absolute inset-0 w-full h-full object-cover"
+              width="600"
+              height="400"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gray-900/55"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
+              <h3 class="text-2xl sm:text-3xl font-bold mb-3">Join Our Community</h3>
+              <p class="text-white/85 text-sm sm:text-base max-w-xs">
+                Connect with 10,000+ students and alumni from Bangladesh studying abroad
+              </p>
+              <div class="flex items-center gap-2.5 mt-5">
+                <svg class="w-8 h-8" fill="white" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                <span class="text-lg font-semibold">Facebook Group</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: benefits + CTA -->
+          <div class="lg:w-7/12 p-8 sm:p-10 flex flex-col justify-center">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-7">Why Join Our Community?</h2>
+
+            <div class="space-y-6 mb-8">
+              {[
+                {
+                  icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+                  title: 'Get Real-Time Updates',
+                  desc: 'Be the first to know about new scholarships and opportunities',
+                },
+                {
+                  icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />`,
+                  title: 'Connect with Alumni',
+                  desc: 'Network with students who have successfully studied abroad',
+                },
+                {
+                  icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+                  title: 'Get Application Help',
+                  desc: 'Ask questions and get guidance on your application process',
+                },
+              ].map(item => (
+                <div class="flex items-start gap-4">
+                  <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-4.5 h-4.5 text-blue-600 w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={item.icon}></svg>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-gray-900 text-sm">{item.title}</div>
+                    <div class="text-sm text-gray-500 mt-0.5">{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <a
+              href="https://www.facebook.com/groups/bangladeshtoabroad"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Join Facebook Group
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== CTA BANNER ===== -->
   <section class="px-4 sm:px-6 py-14">
     <div class="max-w-6xl mx-auto">
