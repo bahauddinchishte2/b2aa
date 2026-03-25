@@ -512,19 +512,78 @@ const countries = [
 
   const input = document.getElementById('hero-search-input');
   const btn = document.getElementById('hero-search-btn');
+
+  function navigateSearch() {
+    const q = input.value.trim();
+    if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
+    else window.location.href = '/search';
+  }
+
   if (input && btn) {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const q = input.value.trim();
-        if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
+    // Inject results dropdown container after the search box wrapper
+    const wrapper = input.closest('.flex');
+    const resultsEl = document.createElement('div');
+    resultsEl.id = 'hero-search-results';
+    resultsEl.className = 'absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-200 divide-y divide-gray-100 max-h-96 overflow-y-auto hidden z-50';
+    wrapper.parentElement.style.position = 'relative';
+    wrapper.parentElement.appendChild(resultsEl);
+
+    import('fuse.js').then(module => {
+      const Fuse = module.default;
+      const fuse = new Fuse(searchData, {
+        keys: ['title', 'country', 'fundingType', 'levelOfStudy', 'tags', 'description', 'excerpt'],
+        threshold: 0.4,
+        includeScore: true
+      });
+
+      function typeConfig(type, category, slug) {
+        switch (type) {
+          case 'scholarship': return { url: `/scholarships/${slug}`, label: 'Scholarship', cls: 'bg-green-100 text-green-700' };
+          case 'opportunity': return { url: `/opportunities/${slug}`, label: (category || '').includes('internship') ? 'Internship' : 'Fellowship', cls: 'bg-orange-100 text-orange-700' };
+          case 'resource': return { url: `/resources/${slug}`, label: 'Resource', cls: 'bg-blue-100 text-blue-700' };
+          case 'blog': return { url: `/blog/${slug}`, label: 'Blog', cls: 'bg-gray-100 text-gray-700' };
+          default: return { url: `/search?q=${encodeURIComponent(input.value.trim())}`, label: type, cls: 'bg-gray-100 text-gray-600' };
+        }
       }
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim();
+        if (!q) { resultsEl.classList.add('hidden'); return; }
+
+        const hits = fuse.search(q);
+        if (hits.length === 0) {
+          resultsEl.classList.remove('hidden');
+          resultsEl.innerHTML = `<div class="p-4 text-sm text-gray-500 text-center">No results found for "<strong>${q}</strong>"</div>`;
+          return;
+        }
+
+        const rows = hits.slice(0, 6).map(({ item }) => {
+          const cfg = typeConfig(item.type, item.category, item.slug);
+          return `<a href="${cfg.url}" class="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+            <div>
+              <div class="text-sm font-medium text-gray-900">${item.title}</div>
+              <div class="text-xs text-gray-500 mt-0.5">${[item.country, item.levelOfStudy].filter(Boolean).join(' · ')}</div>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${cfg.cls}">${cfg.label}</span>
+          </a>`;
+        }).join('');
+
+        const seeAll = `<a href="/search?q=${encodeURIComponent(q)}" class="block px-4 py-3 text-center text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors">See all results &rarr;</a>`;
+        resultsEl.innerHTML = rows + seeAll;
+        resultsEl.classList.remove('hidden');
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); navigateSearch(); }
+        if (e.key === 'Escape') resultsEl.classList.add('hidden');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!wrapper.parentElement.contains(e.target)) resultsEl.classList.add('hidden');
+      });
     });
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const q = input.value.trim();
-      if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
-      else window.location.href = '/search';
-    });
+
+    btn.addEventListener('click', (e) => { e.preventDefault(); navigateSearch(); });
   }
 </script>
 
