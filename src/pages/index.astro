@@ -101,6 +101,37 @@ const countries = [
   <!-- ===== HERO ===== -->
   <section class="hero-section relative overflow-hidden">
     <div class="hero-bg absolute inset-0"></div>
+    <div class="hero-dots absolute inset-0"></div>
+    <div class="hero-map absolute inset-0 flex items-center justify-center pointer-events-none">
+      <svg viewBox="0 0 1200 600" class="w-full max-w-5xl opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
+        <g fill="currentColor" class="text-blue-800">
+          <ellipse cx="280" cy="220" rx="90" ry="55" />
+          <ellipse cx="320" cy="280" rx="40" ry="80" />
+          <ellipse cx="260" cy="340" rx="25" ry="30" />
+          <ellipse cx="540" cy="200" rx="70" ry="50" />
+          <ellipse cx="580" cy="250" rx="50" ry="60" />
+          <ellipse cx="520" cy="290" rx="30" ry="25" />
+          <ellipse cx="610" cy="180" rx="90" ry="45" />
+          <ellipse cx="680" cy="230" rx="60" ry="40" />
+          <ellipse cx="750" cy="220" rx="80" ry="55" />
+          <ellipse cx="820" cy="260" rx="50" ry="35" />
+          <ellipse cx="900" cy="280" rx="70" ry="50" />
+          <ellipse cx="950" cy="240" rx="40" ry="30" />
+          <ellipse cx="580" cy="380" rx="60" ry="40" />
+          <ellipse cx="630" cy="420" rx="30" ry="25" />
+          <ellipse cx="960" cy="360" rx="55" ry="40" />
+          <ellipse cx="1000" cy="320" rx="30" ry="25" />
+          <ellipse cx="170" cy="250" rx="50" ry="60" />
+          <ellipse cx="140" cy="320" rx="25" ry="40" />
+          <circle cx="350" cy="180" r="8" />
+          <circle cx="420" cy="200" r="6" />
+          <circle cx="480" cy="350" r="5" />
+          <circle cx="700" cy="320" r="7" />
+          <circle cx="850" cy="190" r="5" />
+          <circle cx="770" cy="300" r="6" />
+        </g>
+      </svg>
+    </div>
 
     <div class="relative z-10 pt-16 pb-0">
       <div class="max-w-3xl mx-auto text-center px-4 sm:px-6">
@@ -606,6 +637,16 @@ const countries = [
 
   .hero-bg {
     background: radial-gradient(ellipse 80% 60% at 50% 0%, #bfdbfe 0%, transparent 70%);
+  }
+
+  .hero-dots {
+    background-image: radial-gradient(circle, #93b4d4 0.8px, transparent 0.8px);
+    background-size: 24px 24px;
+    opacity: 0.25;
+  }
+
+  .hero-map {
+    z-index: 1;
   }
 
   .hero-wave {
