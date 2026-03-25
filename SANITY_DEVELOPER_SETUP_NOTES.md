@@ -280,7 +280,7 @@ Trigger a new build/deploy. Since we use SSG, the site fetches fresh data from S
 
 ### Adding a new field to a content type
 1. Add the field in the Sanity Studio schema (in the Studio repo).
-2. Deploy the updated Studio.
+2. Deploy the updated Studio (see `SANITY_STUDIO_DEPLOYMENT_GUIDE.md` for the full step-by-step deploy process).
 3. Update the GROQ query field list in `src/lib/sanity-queries.ts`.
 4. Update the TypeScript interface in the same file.
 5. Update the normalizer function in `src/lib/content.ts` if the field needs to be exposed.
