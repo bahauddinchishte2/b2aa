@@ -95,12 +95,14 @@ const defaultRelImage = 'https://images.pexels.com/photos/267885/pexels-photo-26
   }}
 >
   <!-- Breadcrumb -->
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-    <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap justify-start">
-      <li><a href="/opportunities/all" class="text-blue-600 hover:text-blue-700 transition-colors">Opportunities</a></li>
-      <li class="text-gray-400">/</li>
-      <li class="text-gray-700 font-medium">{frontmatter.title}</li>
-    </ol>
+  <nav class="w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+      <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+        <li><a href="/opportunities/all" class="text-blue-600 hover:text-blue-700 transition-colors">Opportunities</a></li>
+        <li class="text-gray-400">/</li>
+        <li class="text-gray-700 font-medium">{frontmatter.title}</li>
+      </ol>
+    </div>
   </nav>
 
   <!-- Hero Banner -->
