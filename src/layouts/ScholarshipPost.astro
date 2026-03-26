@@ -110,31 +110,31 @@ const defaultRelImage = 'https://images.pexels.com/photos/267885/pexels-photo-26
   </nav>
 
   <!-- Hero Banner -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
-    <div class="relative rounded-2xl overflow-hidden h-[220px] sm:h-[280px]">
-      <img
-        src={heroImage}
-        alt={frontmatter.title}
-        class="w-full h-full object-cover"
-        width="1200"
-        height="280"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent"></div>
-      <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-        <div class="flex items-center gap-2 mb-3 flex-wrap">
-          <span class={`text-xs font-semibold px-3 py-1 rounded-full ${getFundingBadge(frontmatter.fundingType)}`}>
-            {frontmatter.fundingType}
-          </span>
-          <span class={`text-xs font-semibold px-3 py-1 rounded-full ${getLevelBadge(frontmatter.levelOfStudy)}`}>
-            {frontmatter.levelOfStudy}
-          </span>
-          {isOpen && (
-            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-500 text-white">
-              Verified
+  <section class="w-full mb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="relative w-full rounded-2xl overflow-hidden" style="min-height: 260px;">
+        <img
+          src={heroImage}
+          alt={frontmatter.title}
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/40 to-gray-900/10"></div>
+        <div class="relative z-10 flex flex-col justify-end h-full min-h-[260px] sm:min-h-[300px] p-6 sm:p-8 lg:p-10">
+          <div class="flex items-center gap-2.5 mb-4 flex-wrap">
+            <span class={`text-xs font-semibold px-3.5 py-1.5 rounded-full ${getFundingBadge(frontmatter.fundingType)}`}>
+              {frontmatter.fundingType}
             </span>
-          )}
+            <span class={`text-xs font-semibold px-3.5 py-1.5 rounded-full ${getLevelBadge(frontmatter.levelOfStudy)}`}>
+              {frontmatter.levelOfStudy}
+            </span>
+            {isOpen && (
+              <span class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-green-500 text-white">
+                Verified
+              </span>
+            )}
+          </div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-snug max-w-3xl">{frontmatter.title}</h1>
         </div>
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">{frontmatter.title}</h1>
       </div>
     </div>
   </section>
