@@ -520,70 +520,83 @@ const countries = [
 <script define:vars={{ searchData }}>
   window.SEARCH_DATA = searchData;
 
-  const form = document.getElementById('hero-search-form');
-  const input = document.getElementById('hero-search-input');
+  function fuzzyMatch(text, query) {
+    if (!text) return false;
+    var hay = String(text).toLowerCase();
+    var needle = query.toLowerCase();
+    if (hay.includes(needle)) return true;
+    var words = needle.split(/\s+/);
+    return words.every(function(w) { return hay.includes(w); });
+  }
 
-  if (form && input) {
-    const formWrapper = form.parentElement;
+  function searchItems(items, query) {
+    if (!query) return [];
+    var q = query.toLowerCase();
+    return items.filter(function(item) {
+      return fuzzyMatch(item.title, q) ||
+        fuzzyMatch(item.country, q) ||
+        fuzzyMatch(item.fundingType, q) ||
+        fuzzyMatch(item.levelOfStudy, q) ||
+        fuzzyMatch(item.description, q) ||
+        fuzzyMatch(item.excerpt, q) ||
+        (item.tags && item.tags.some(function(t) { return fuzzyMatch(t, q); }));
+    });
+  }
+
+  function getTypeConfig(type, category, slug) {
+    switch (type) {
+      case 'scholarship': return { url: '/scholarships/' + slug, label: 'Scholarship', cls: 'bg-green-100 text-green-700' };
+      case 'opportunity': return { url: '/opportunities/' + slug, label: (category || '').includes('internship') ? 'Internship' : 'Fellowship', cls: 'bg-orange-100 text-orange-700' };
+      case 'resource': return { url: '/resources/' + slug, label: 'Resource', cls: 'bg-blue-100 text-blue-700' };
+      case 'blog': return { url: '/blog/' + slug, label: 'Blog', cls: 'bg-gray-100 text-gray-700' };
+      default: return { url: '/search?q=' + encodeURIComponent(slug), label: type, cls: 'bg-gray-100 text-gray-600' };
+    }
+  }
+
+  function renderResults(resultsEl, hits, query) {
+    if (hits.length === 0) {
+      resultsEl.classList.remove('hidden');
+      resultsEl.innerHTML = '<div class="p-4 text-sm text-gray-500 text-center">No results found for "' + query + '"</div>';
+      return;
+    }
+    var rows = hits.slice(0, 6).map(function(item) {
+      var cfg = getTypeConfig(item.type, item.category, item.slug);
+      var meta = [item.country, item.levelOfStudy].filter(Boolean).join(' \u00b7 ');
+      return '<a href="' + cfg.url + '" class="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">' +
+        '<div><div class="text-sm font-medium text-gray-900">' + item.title + '</div>' +
+        '<div class="text-xs text-gray-500 mt-0.5">' + meta + '</div></div>' +
+        '<span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0 ' + cfg.cls + '">' + cfg.label + '</span></a>';
+    }).join('');
+    var seeAll = '<a href="/search?q=' + encodeURIComponent(query) + '" class="block px-4 py-3 text-center text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors">See all results &rarr;</a>';
+    resultsEl.innerHTML = rows + seeAll;
+    resultsEl.classList.remove('hidden');
+  }
+
+  var form = document.getElementById('hero-search-form');
+  var heroInput = document.getElementById('hero-search-input');
+
+  if (form && heroInput) {
+    var formWrapper = form.parentElement;
     formWrapper.style.position = 'relative';
 
-    const resultsEl = document.createElement('div');
+    var resultsEl = document.createElement('div');
     resultsEl.id = 'hero-search-results';
     resultsEl.className = 'absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-200 divide-y divide-gray-100 max-h-96 overflow-y-auto hidden z-50';
     formWrapper.appendChild(resultsEl);
 
-    import('fuse.js').then(module => {
-      const Fuse = module.default;
-      const fuse = new Fuse(searchData, {
-        keys: ['title', 'country', 'fundingType', 'levelOfStudy', 'tags', 'description', 'excerpt'],
-        threshold: 0.4,
-        includeScore: true
-      });
+    heroInput.addEventListener('input', function() {
+      var q = heroInput.value.trim();
+      if (!q) { resultsEl.classList.add('hidden'); return; }
+      var hits = searchItems(searchData, q);
+      renderResults(resultsEl, hits, q);
+    });
 
-      function typeConfig(type, category, slug) {
-        switch (type) {
-          case 'scholarship': return { url: `/scholarships/${slug}`, label: 'Scholarship', cls: 'bg-green-100 text-green-700' };
-          case 'opportunity': return { url: `/opportunities/${slug}`, label: (category || '').includes('internship') ? 'Internship' : 'Fellowship', cls: 'bg-orange-100 text-orange-700' };
-          case 'resource': return { url: `/resources/${slug}`, label: 'Resource', cls: 'bg-blue-100 text-blue-700' };
-          case 'blog': return { url: `/blog/${slug}`, label: 'Blog', cls: 'bg-gray-100 text-gray-700' };
-          default: return { url: `/search?q=${encodeURIComponent(input.value.trim())}`, label: type, cls: 'bg-gray-100 text-gray-600' };
-        }
-      }
+    heroInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') resultsEl.classList.add('hidden');
+    });
 
-      input.addEventListener('input', () => {
-        const q = input.value.trim();
-        if (!q) { resultsEl.classList.add('hidden'); return; }
-
-        const hits = fuse.search(q);
-        if (hits.length === 0) {
-          resultsEl.classList.remove('hidden');
-          resultsEl.innerHTML = `<div class="p-4 text-sm text-gray-500 text-center">No results found for "<strong>${q}</strong>"</div>`;
-          return;
-        }
-
-        const rows = hits.slice(0, 6).map(({ item }) => {
-          const cfg = typeConfig(item.type, item.category, item.slug);
-          return `<a href="${cfg.url}" class="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-            <div>
-              <div class="text-sm font-medium text-gray-900">${item.title}</div>
-              <div class="text-xs text-gray-500 mt-0.5">${[item.country, item.levelOfStudy].filter(Boolean).join(' · ')}</div>
-            </div>
-            <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${cfg.cls}">${cfg.label}</span>
-          </a>`;
-        }).join('');
-
-        const seeAll = `<a href="/search?q=${encodeURIComponent(q)}" class="block px-4 py-3 text-center text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors">See all results &rarr;</a>`;
-        resultsEl.innerHTML = rows + seeAll;
-        resultsEl.classList.remove('hidden');
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') resultsEl.classList.add('hidden');
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!formWrapper.contains(e.target)) resultsEl.classList.add('hidden');
-      });
+    document.addEventListener('click', function(e) {
+      if (!formWrapper.contains(e.target)) resultsEl.classList.add('hidden');
     });
   }
 </script>
