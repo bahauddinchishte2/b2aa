@@ -14,8 +14,6 @@ const formattedDeadline = format(new Date(frontmatter.deadline), 'MMMM d, yyyy')
 const isOpen = new Date(frontmatter.deadline) >= new Date();
 
 const typeLabel = frontmatter.category === 'internship' ? 'Internship' : 'Fellowship';
-const categoryLabel = frontmatter.category.charAt(0).toUpperCase() + frontmatter.category.slice(1);
-
 let metaDescription = `Details about ${frontmatter.title} for ${frontmatter.levelOfStudy} students in ${frontmatter.country}. Application opens ${formattedOpenDate} and closes ${formattedDeadline}.`;
 
 const keywords = [
@@ -98,12 +96,10 @@ const defaultRelImage = 'https://images.pexels.com/photos/267885/pexels-photo-26
 >
   <!-- Breadcrumb -->
   <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-    <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+    <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap justify-start">
       <li><a href="/opportunities/all" class="text-blue-600 hover:text-blue-700 transition-colors">Opportunities</a></li>
       <li class="text-gray-400">/</li>
-      <li><a href={`/opportunities/${frontmatter.category === 'internship' ? 'internships' : 'fellowships'}`} class="text-blue-600 hover:text-blue-700 transition-colors">{categoryLabel}</a></li>
-      <li class="text-gray-400">/</li>
-      <li class="text-gray-700 font-medium truncate max-w-[200px] sm:max-w-none">{frontmatter.title}</li>
+      <li class="text-gray-700 font-medium">{frontmatter.title}</li>
     </ol>
   </nav>
 
