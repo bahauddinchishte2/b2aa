@@ -40,7 +40,7 @@ const countryImages: Record<string, string> = {
   'Europe': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=1200',
 };
 
-const heroImage = countryImages[frontmatter.country] || 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1200';
+const heroImage = frontmatter.heroImage || countryImages[frontmatter.country] || 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1200';
 
 const allScholarships = await getAllScholarships();
 const relatedScholarships = allScholarships
