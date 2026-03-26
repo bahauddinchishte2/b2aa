@@ -1,16 +1,20 @@
 ---
 import Layout from './Layout.astro';
 import { format } from 'date-fns';
-import ApplicationTimeline from '../components/ApplicationTimeline.astro';
 import AuthorCard from '../components/AuthorCard.tsx';
 import GiscusComments from '../components/GiscusComments.tsx';
 import SocialShare from '../components/SocialShare.astro';
 import TranslateButton from '../components/TranslateButton.astro';
+import { getAllOpportunities } from '../lib/content';
 
 const { frontmatter } = Astro.props;
 
 const formattedOpenDate = format(new Date(frontmatter.openDate), 'MMMM d, yyyy');
 const formattedDeadline = format(new Date(frontmatter.deadline), 'MMMM d, yyyy');
+const isOpen = new Date(frontmatter.deadline) >= new Date();
+
+const typeLabel = frontmatter.category === 'internship' ? 'Internship' : 'Fellowship';
+const categoryLabel = frontmatter.category.charAt(0).toUpperCase() + frontmatter.category.slice(1);
 
 let metaDescription = `Details about ${frontmatter.title} for ${frontmatter.levelOfStudy} students in ${frontmatter.country}. Application opens ${formattedOpenDate} and closes ${formattedDeadline}.`;
 
@@ -27,9 +31,55 @@ const keywords = [
   'Bangladesh students',
   ...frontmatter.tags
 ];
+
+const countryImages: Record<string, string> = {
+  'Germany': 'https://images.pexels.com/photos/1595391/pexels-photo-1595391.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'USA': 'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'United States': 'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'United Kingdom': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'UK': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'Canada': 'https://images.pexels.com/photos/2845013/pexels-photo-2845013.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'Australia': 'https://images.pexels.com/photos/1878293/pexels-photo-1878293.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'South Korea': 'https://images.pexels.com/photos/373290/pexels-photo-373290.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'Europe': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=1200',
+};
+
+const heroImage = countryImages[frontmatter.country] || 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1200';
+
+const allOpportunities = await getAllOpportunities();
+const relatedOpportunities = allOpportunities
+  .filter(o => o.data.title !== frontmatter.title)
+  .slice(0, 4);
+
+function getFundingColor(type: string) {
+  const t = (type || '').toLowerCase();
+  if (t.includes('full')) return 'text-green-600';
+  if (t.includes('partial')) return 'text-yellow-600';
+  return 'text-blue-600';
+}
+
+function getFundingBadge(type: string) {
+  const t = (type || '').toLowerCase();
+  if (t.includes('full')) return 'bg-gray-800 text-white';
+  if (t.includes('partial')) return 'bg-yellow-500 text-white';
+  return 'bg-blue-600 text-white';
+}
+
+const relOpportunityImages: Record<string, string> = {
+  'Germany': 'https://images.pexels.com/photos/1595391/pexels-photo-1595391.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'USA': 'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'United States': 'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'United Kingdom': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'UK': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Europe': 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Canada': 'https://images.pexels.com/photos/2845013/pexels-photo-2845013.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'South Korea': 'https://images.pexels.com/photos/373290/pexels-photo-373290.jpeg?auto=compress&cs=tinysrgb&w=600',
+};
+
+const defaultRelImage = 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=600';
 ---
 
-<Layout 
+<Layout
   title={frontmatter.title}
   description={metaDescription}
   type="opportunity"
@@ -46,254 +96,349 @@ const keywords = [
     category: frontmatter.category
   }}
 >
-  <article class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
-    <div class="mb-6 sm:mb-8 p-6 sm:p-8 bg-white rounded-xl shadow-lg border border-gray-400">
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-900">{frontmatter.title}</h1>
-      <div class="flex justify-end">
-        <TranslateButton />
-      </div>
-    </div>
+  <!-- Breadcrumb -->
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+    <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+      <li><a href="/opportunities/all" class="text-blue-600 hover:text-blue-700 transition-colors">Opportunities</a></li>
+      <li class="text-gray-400">/</li>
+      <li><a href={`/opportunities/${frontmatter.category === 'internship' ? 'internships' : 'fellowships'}`} class="text-blue-600 hover:text-blue-700 transition-colors">{categoryLabel}</a></li>
+      <li class="text-gray-400">/</li>
+      <li class="text-gray-700 font-medium truncate max-w-[200px] sm:max-w-none">{frontmatter.title}</li>
+    </ol>
+  </nav>
 
-    <!-- Status -->
-    <div class="mt-8 mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
-      <h2 class="text-lg sm:text-xl font-semibold mb-4">Status</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Status -->
-        <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-medium text-gray-500">Current Status</h3>
-          {new Date(frontmatter.deadline) >= new Date() ? (
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 w-fit">
-              <span class="w-2 h-2 mr-2 rounded-full bg-green-500"></span>
-              Currently Open
-            </span>
-          ) : (
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 w-fit">
-              <span class="w-2 h-2 mr-2 rounded-full bg-red-500"></span>
-              Closed
+  <!-- Hero Banner -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
+    <div class="relative rounded-2xl overflow-hidden h-[220px] sm:h-[280px]">
+      <img
+        src={heroImage}
+        alt={frontmatter.title}
+        class="w-full h-full object-cover"
+        width="1200"
+        height="280"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span class={`text-xs font-semibold px-3 py-1 rounded-full ${getFundingBadge(frontmatter.fundingType)}`}>
+            {frontmatter.fundingType}
+          </span>
+          <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-600 text-white">
+            {frontmatter.levelOfStudy}
+          </span>
+          <span class={`text-xs font-semibold px-3 py-1 rounded-full ${frontmatter.category === 'internship' ? 'bg-orange-500' : 'bg-teal-500'} text-white`}>
+            {typeLabel}
+          </span>
+          {isOpen && (
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-500 text-white">
+              Open
             </span>
           )}
         </div>
-
-        <!-- Application Timeline -->
-        <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-medium text-gray-500">Application Timeline</h3>
-          <p class="text-sm text-gray-900">Opens: {formattedOpenDate}</p>
-          <p class="text-sm text-gray-900">Deadline: {formattedDeadline}</p>
-        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">{frontmatter.title}</h1>
       </div>
     </div>
+  </section>
 
-    <!-- Program Details -->
-    <div class="mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200">
-      <h2 class="text-lg sm:text-xl font-semibold mb-4">Program Details</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Location Details -->
-        <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-medium text-gray-500">Location</h3>
-          <p class="text-sm text-gray-900">Country: {frontmatter.country}</p>
-          <p class="text-sm text-gray-900">Institution: {frontmatter.hostInstitution}</p>
+  <article class="max-w-7xl mx-auto px-4 sm:px-6">
+    <!-- Two Column Layout -->
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-10">
+
+      <!-- Left Column: Main Content -->
+      <div class="flex-1 min-w-0">
+        <!-- Overview / Summary -->
+        <div id="summary-section" class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 mb-6 hidden">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Overview</h2>
+          <div id="opportunity-summary" class="text-base text-gray-600 leading-relaxed"></div>
         </div>
 
-        <!-- Program Info -->
-        <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-medium text-gray-500">Program Info</h3>
-          <p class="text-sm text-gray-900">Level: {frontmatter.levelOfStudy}</p>
-          <p class="text-sm text-gray-900">Funding: {frontmatter.fundingType}</p>
-          <p class="text-sm text-gray-900">Recipients: {frontmatter.numberOfRecipients}</p>
+        <!-- MDX Content -->
+        <div id="blog-content">
+          <slot />
         </div>
 
-        <!-- Category and Tags -->
-        <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-medium text-gray-500">Category</h3>
-          <p class="text-sm text-gray-900">{frontmatter.category.replace('-', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
-          <div class="flex flex-wrap gap-2 mt-1">
-            {frontmatter.tags.map((tag: string) => (
-              <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-                #{tag}
-              </span>
-            ))}
+        <!-- Translate Button -->
+        <div class="flex justify-end mt-4 mb-6">
+          <TranslateButton />
+        </div>
+      </div>
+
+      <!-- Right Column: Sidebar -->
+      <div class="lg:w-[340px] xl:w-[380px] flex-shrink-0">
+        <div class="lg:sticky lg:top-6 space-y-6">
+
+          <!-- Key Information -->
+          <div class="bg-white rounded-2xl border border-gray-200 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-5">Key Information</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Deadline</span>
+                <span class={`text-sm font-semibold ${isOpen ? 'text-red-500' : 'text-gray-400'}`}>{formattedDeadline}</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Country</span>
+                <span class="text-sm font-semibold text-gray-900">{frontmatter.country}</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Type</span>
+                <span class="text-sm font-semibold text-gray-900">{typeLabel}</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Degree Level</span>
+                <span class="text-sm font-semibold text-gray-900">{frontmatter.levelOfStudy}</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Funding</span>
+                <span class={`text-sm font-semibold ${getFundingColor(frontmatter.fundingType)}`}>{frontmatter.fundingType}</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <span class="text-sm text-gray-500">Institution</span>
+                <span class="text-sm font-semibold text-gray-900">{frontmatter.hostInstitution}</span>
+              </div>
+              {frontmatter.numberOfRecipients && frontmatter.numberOfRecipients !== 'Not Mentioned' && (
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-500">Recipients</span>
+                  <span class="text-sm font-semibold text-gray-900">{frontmatter.numberOfRecipients}</span>
+                </div>
+              )}
+              <div class="flex items-center justify-between py-2">
+                <span class="text-sm text-gray-500">Status</span>
+                {isOpen ? (
+                  <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-600">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    Open
+                  </span>
+                ) : (
+                  <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-red-500">
+                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                    Closed
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
+
+          <!-- Ready to Apply CTA -->
+          <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Ready to Apply?</h3>
+            <p class="text-sm text-gray-600 mb-5">Start your application early. We recommend preparing your documents at least 2 months before the deadline.</p>
+            <a
+              href={frontmatter.officialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors mb-3"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Visit Official Website
+            </a>
+            <button class="save-to-list-btn flex items-center justify-center gap-2 w-full text-blue-600 hover:text-blue-700 font-semibold text-sm py-2 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+              Save to My List
+            </button>
+          </div>
+
+          <!-- Share -->
+          <div class="bg-white rounded-2xl border border-gray-200 p-6">
+            <h3 class="text-base font-bold text-gray-900 mb-4">Share this opportunity</h3>
+            <div class="flex items-center gap-3">
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 flex items-center justify-center text-gray-500 hover:text-blue-600 transition-colors" aria-label="Facebook">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+              </a>
+              <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(frontmatter.title)}&url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-sky-100 flex items-center justify-center text-gray-500 hover:text-sky-500 transition-colors" aria-label="Twitter">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 flex items-center justify-center text-gray-500 hover:text-blue-700 transition-colors" aria-label="LinkedIn">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+              <button class="copy-link-btn w-auto h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center gap-2 px-4 text-gray-600 hover:text-gray-800 text-sm font-medium transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                Copy Link
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- Summary Section -->
-    <div id="summary-section" class="mt-8 mb-6 sm:mb-8 p-6 bg-white rounded-lg border border-gray-200 hidden">
-      <h2 class="text-lg sm:text-xl font-semibold mb-4">Overview</h2>
-      <div id="opportunity-summary" class="text-gray-700 prose-sm">
-        <slot name="summary" />
-      </div>
-    </div>
-
-    <div id="blog-content">
-      <slot />
-    </div>
-
-    <!-- Application Timeline -->
-    <ApplicationTimeline 
-      openDate={frontmatter.openDate}
-      deadline={frontmatter.deadline}
-      category={frontmatter.category}
-    />
-    
-    <div class="mt-8 text-center sm:text-left">
-      <a 
-        href={frontmatter.officialLink} 
-        class="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-sm transition-colors text-sm sm:text-base"
-        target="_blank" 
-        rel="noopener noreferrer"
-      >
-        Apply Now on Official Website
-      </a>
-    </div>
-
-    <div class="mt-8">
+    <!-- Author Card -->
+    <div class="mt-10">
       <AuthorCard
         client:only="react"
         name={frontmatter.author}
       />
     </div>
 
-    <!-- Add Social Share Component -->
-    <SocialShare title={frontmatter.title} url={Astro.url.href} />
-
-    <div class="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-      <h3 class="text-xl font-semibold mb-6">Comments</h3>
+    <!-- Comments -->
+    <div class="mt-8 bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-6">Comments</h3>
       <GiscusComments client:only="react" />
     </div>
+
+    <!-- Related Opportunities -->
+    {relatedOpportunities.length > 0 && (
+      <section class="mt-12 mb-16">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Related Opportunities</h2>
+          <a href="/opportunities/all" class="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">View All</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {relatedOpportunities.map(ro => {
+            const relImg = relOpportunityImages[ro.data.country] || defaultRelImage;
+            const relDeadline = ro.data.deadline ? format(new Date(ro.data.deadline), 'MMM yyyy') : '';
+            const relType = ro.data.category === 'internship' ? 'Internship' : 'Fellowship';
+            return (
+              <a href={`/opportunities/${ro.slug}`} class="group block">
+                <div class="rounded-2xl overflow-hidden h-36 mb-3">
+                  <img
+                    src={relImg}
+                    alt={ro.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    width="300"
+                    height="144"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex items-center gap-1.5 mb-2 flex-wrap">
+                  <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${ro.data.category === 'internship' ? 'bg-orange-100 text-orange-700' : 'bg-teal-100 text-teal-700'}`}>
+                    {relType}
+                  </span>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                    {ro.data.levelOfStudy}
+                  </span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors leading-snug mb-1.5">{ro.data.title}</h3>
+                <p class="text-xs text-gray-500">
+                  {ro.data.country}{relDeadline ? ` · Deadline: ${relDeadline}` : ''}
+                </p>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
   </article>
 </Layout>
 
 <style is:global>
-  /* Typography */
-  .prose h1 {
+  #blog-content .prose h1 {
     @apply text-2xl sm:text-3xl font-bold mb-6 border-b border-gray-200 pb-3;
   }
-  
-  .prose h2 {
-    @apply text-xl sm:text-2xl font-bold mb-4 text-gray-800 mt-0 pt-0;
+
+  #blog-content .prose h2 {
+    @apply text-xl sm:text-2xl font-bold mb-4 text-gray-900 mt-0 pt-0;
   }
-  
-  .prose h3 {
-    @apply text-lg sm:text-xl font-bold mt-6 mb-3 text-gray-700;
+
+  #blog-content .prose h3 {
+    @apply text-lg sm:text-xl font-bold mt-6 mb-3 text-gray-800;
   }
-  
-  .prose p {
-    @apply my-4 text-gray-700 leading-relaxed text-sm sm:text-base;
+
+  #blog-content .prose p {
+    @apply my-3 text-gray-600 leading-relaxed text-sm sm:text-base;
   }
-  
-  /* List styling */
-  .prose ul {
-    @apply my-6 pl-5 space-y-2 list-none; /* Added list-none to remove default bullets */
+
+  #blog-content .prose ul {
+    @apply my-4 pl-5 space-y-1.5 list-none;
   }
-  
-  .prose ol {
-    @apply my-6 pl-5 space-y-2 list-decimal;
+
+  #blog-content .prose ol {
+    @apply my-4 pl-5 space-y-1.5 list-decimal;
   }
-  
-  .prose li {
-    @apply mb-2 pl-2 text-sm sm:text-base;
+
+  #blog-content .prose li {
+    @apply mb-1 pl-2 text-sm sm:text-base text-gray-600;
   }
-  
-  .prose ul li::before {
-    content: "•";
-    @apply text-primary-500 font-bold mr-2 inline-block;
+
+  #blog-content .prose ul li::before {
+    content: "\2022";
+    @apply text-blue-500 font-bold mr-2 inline-block;
   }
-  
-  .prose ol li::marker {
-    @apply text-primary-500 font-semibold;
+
+  #blog-content .prose ol li::marker {
+    @apply text-blue-500 font-semibold;
   }
-  
-  /* Section styling */
+
   .section-block {
-    @apply bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-6 sm:mb-8;
+    @apply bg-white p-5 sm:p-7 rounded-2xl border border-gray-200 mb-6;
   }
-  
-  /* Table styling */
-  .prose table {
+
+  #blog-content .prose table {
     @apply w-full border-collapse my-6 text-sm sm:text-base;
   }
-  
-  .prose table th {
+
+  #blog-content .prose table th {
     @apply bg-gray-50 text-left p-2 sm:p-3 border-b-2 border-gray-200 font-semibold text-gray-700;
   }
-  
-  .prose table td {
-    @apply p-2 sm:p-3 border-b border-gray-100 text-gray-700;
+
+  #blog-content .prose table td {
+    @apply p-2 sm:p-3 border-b border-gray-100 text-gray-600;
   }
-  
-  /* Blockquote styling */
-  .prose blockquote {
-    @apply italic border-l-4 border-primary-200 pl-4 py-2 my-6 text-gray-600;
+
+  #blog-content .prose blockquote {
+    @apply italic border-l-4 border-blue-200 pl-4 py-2 my-6 text-gray-600;
   }
-  
-  /* Link styling */
-  .prose a {
-    @apply text-primary-600 hover:text-primary-800 transition-colors;
+
+  #blog-content .prose a {
+    @apply text-blue-600 hover:text-blue-800 transition-colors;
   }
-  
-  /* Code block styling */
-  .prose pre {
-    @apply bg-gray-50 p-3 sm:p-4 rounded-md overflow-x-auto my-6 border border-gray-100 text-sm;
+
+  #blog-content .prose pre {
+    @apply bg-gray-50 p-3 sm:p-4 rounded-lg overflow-x-auto my-6 border border-gray-100 text-sm;
   }
-  
-  .prose code {
+
+  #blog-content .prose code {
     @apply bg-gray-50 px-1 py-0.5 rounded text-xs sm:text-sm text-gray-800;
   }
-  
-  .prose pre code {
+
+  #blog-content .prose pre code {
     @apply bg-transparent px-0 py-0 text-sm sm:text-base;
   }
-  
-  /* Horizontal rule */
-  .prose hr {
+
+  #blog-content .prose hr {
     @apply my-8 border-t border-gray-200;
   }
-  
-  /* Image styling */
-  .prose img {
-    @apply rounded-md mx-auto my-6 max-w-full;
+
+  #blog-content .prose img {
+    @apply rounded-lg mx-auto my-6 max-w-full;
   }
-  
-  /* Special callout boxes - minimal style */
-  .prose .note,
-  .prose .important,
-  .prose .tip {
-    @apply border-l-4 py-3 px-4 my-6 bg-gray-50;
+
+  #blog-content .prose .note,
+  #blog-content .prose .important,
+  #blog-content .prose .tip {
+    @apply border-l-4 py-3 px-4 my-6 bg-gray-50 rounded-r-lg;
   }
-  
-  .prose .note {
-    @apply border-blue-300;
+
+  #blog-content .prose .note {
+    @apply border-blue-400;
   }
-  
-  .prose .important {
-    @apply border-amber-300;
+
+  #blog-content .prose .important {
+    @apply border-amber-400;
   }
-  
-  .prose .tip {
-    @apply border-green-300;
+
+  #blog-content .prose .tip {
+    @apply border-green-400;
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Get the content container
     const contentContainer = document.getElementById('blog-content');
     if (!contentContainer) return;
-    
-    // Process the first paragraph for summary
+
     processFirstParagraph();
-    
-    // Apply section blocks
     applySectionBlocks();
-    
+
     function processFirstParagraph() {
       const summaryArea = document.getElementById('opportunity-summary');
       if (!summaryArea || summaryArea.children.length > 0) return;
-      
+
       const summarySection = document.getElementById('summary-section');
-      
-      // Find the first h1 and following paragraph
+
       const firstH1 = contentContainer.querySelector('h1');
       if (firstH1) {
         firstH1.style.display = 'none';
@@ -304,7 +449,6 @@ const keywords = [
           nextEl.style.display = 'none';
         }
       } else {
-        // If no h1, use the first paragraph
         const firstP = contentContainer.querySelector('p');
         if (firstP) {
           summaryArea.innerHTML = firstP.innerHTML;
@@ -313,138 +457,120 @@ const keywords = [
         }
       }
     }
-    
+
     function applySectionBlocks() {
-      // Add the 'prose' class to the content container to enable prose styling
       contentContainer.classList.add('prose', 'prose-lg', 'max-w-none');
-      
-      // First, directly wrap existing sections in Markdown that are already divided by h2
       wrapExistingSections();
     }
-    
+
     function getSectionClass(headingText) {
       headingText = headingText.toLowerCase();
-      
-      if (headingText.includes('overview') || headingText.includes('introduction') || 
+      if (headingText.includes('overview') || headingText.includes('introduction') ||
           headingText.includes('program overview') || headingText.includes('opportunity overview')) {
         return 'overview-section';
       } else if (headingText.includes('benefit') || headingText.includes('financial')) {
         return 'benefits-section';
-      } else if (headingText.includes('eligibility') || headingText.includes('requirement') || 
+      } else if (headingText.includes('eligibility') || headingText.includes('requirement') ||
                 headingText.includes('criteria') || headingText.includes('qualification')) {
         return 'eligibility-section';
-      } else if (headingText.includes('application') || headingText.includes('process') || 
-                headingText.includes('how to apply') || headingText.includes('submission') || 
+      } else if (headingText.includes('application') || headingText.includes('process') ||
+                headingText.includes('how to apply') || headingText.includes('submission') ||
                 headingText.includes('document')) {
         return 'application-section';
-      } else if (headingText.includes('date') || headingText.includes('timeline') || 
+      } else if (headingText.includes('date') || headingText.includes('timeline') ||
                 headingText.includes('deadline') || headingText.includes('important dates')) {
         return 'dates-section';
-      } else if (headingText.includes('contact') || headingText.includes('information') || 
+      } else if (headingText.includes('contact') || headingText.includes('information') ||
                 headingText.includes('inquiries')) {
         return 'contact-section';
-      } else if (headingText.includes('tip') || headingText.includes('advice') || 
+      } else if (headingText.includes('tip') || headingText.includes('advice') ||
                 headingText.includes('recommendation') || headingText.includes('success')) {
         return 'tips-section';
       } else {
         return 'misc-section';
       }
     }
-    
+
     function wrapExistingSections() {
-      // Get all the h2 elements
       const h2Elements = contentContainer.querySelectorAll('h2');
       const summarySection = document.getElementById('summary-section');
       const hasSummary = !summarySection.classList.contains('hidden');
-      
-      // If no h2 elements, wrap everything in a single section
+
       if (h2Elements.length === 0) {
-        // Only create overview section if no summary exists
         if (!hasSummary) {
           const sectionBlock = document.createElement('div');
           sectionBlock.className = 'section-block overview-section';
-          
-          // Clone all children
           while (contentContainer.firstChild) {
             sectionBlock.appendChild(contentContainer.firstChild);
           }
-          
           contentContainer.appendChild(sectionBlock);
         }
         return;
       }
-      
-      // Mark positions of all h2 elements
+
       const sections = [];
       let firstContentBeforeH2 = [];
-      
-      // Check if there's content before the first h2
       let currentNode = contentContainer.firstChild;
       const firstH2 = h2Elements[0];
-      
+
       while (currentNode && currentNode !== firstH2) {
-        if (currentNode.nodeType === 1 || 
+        if (currentNode.nodeType === 1 ||
             (currentNode.nodeType === 3 && currentNode.textContent.trim())) {
           firstContentBeforeH2.push(currentNode);
         }
         currentNode = currentNode.nextSibling;
       }
-      
-      // If there's content before the first h2, create an intro section
+
       if (firstContentBeforeH2.length > 0) {
-        // Only create intro section if no summary exists
         if (!hasSummary) {
           const introBlock = document.createElement('div');
           introBlock.className = 'section-block overview-section';
-          
-          // Move the intro content into the block
           firstContentBeforeH2.forEach(node => {
             introBlock.appendChild(node);
           });
-          
-          // Add this to the beginning of our sections array
           sections.push(introBlock);
         }
       }
-      
-      // Process each h2 section
+
       h2Elements.forEach((h2, index) => {
         const sectionContent = [h2];
         let sectionClass = getSectionClass(h2.textContent);
-        
-        // Find all content until the next h2 or the end
         let nextNode = h2.nextSibling;
         const nextH2 = h2Elements[index + 1];
-        
+
         while (nextNode && nextNode !== nextH2) {
-          // Only include element nodes and non-empty text nodes
-          if (nextNode.nodeType === 1 || 
+          if (nextNode.nodeType === 1 ||
               (nextNode.nodeType === 3 && nextNode.textContent.trim())) {
             sectionContent.push(nextNode);
           }
           nextNode = nextNode.nextSibling;
         }
-        
-        // Create a new section block
+
         const sectionBlock = document.createElement('div');
         sectionBlock.className = `section-block ${sectionClass}`;
-        
-        // Move all content into the section block
         sectionContent.forEach(node => {
           sectionBlock.appendChild(node);
         });
-        
-        // Add this section to our array
         sections.push(sectionBlock);
       });
-      
-      // Clear the container and add all the section blocks
+
       while (contentContainer.firstChild) {
         contentContainer.removeChild(contentContainer.firstChild);
       }
-      
+
       sections.forEach(section => {
         contentContainer.appendChild(section);
+      });
+    }
+
+    const copyBtn = document.querySelector('.copy-link-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+          const originalHTML = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+          setTimeout(function() { copyBtn.innerHTML = originalHTML; }, 2000);
+        });
       });
     }
   });
