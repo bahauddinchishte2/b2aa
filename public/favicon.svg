@@ -1,4 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="50" fill="#006A4E"/>
-  <circle cx="45" cy="50" r="20" fill="#F42A41"/>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006A4E"/>
+      <stop offset="100%" stop-color="#004D38"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="20" fill="url(#bg)"/>
+  <g transform="translate(50,48)">
+    <circle cx="0" cy="0" r="26" fill="none" stroke="#ffffff" stroke-width="2.2" opacity="0.9"/>
+    <ellipse cx="0" cy="0" rx="10" ry="26" fill="none" stroke="#ffffff" stroke-width="1.8" opacity="0.7"/>
+    <line x1="-26" y1="0" x2="26" y2="0" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+    <line x1="-24" y1="-10" x2="24" y2="-10" stroke="#ffffff" stroke-width="1.2" opacity="0.4"/>
+    <line x1="-24" y1="10" x2="24" y2="10" stroke="#ffffff" stroke-width="1.2" opacity="0.4"/>
+    <circle cx="0" cy="0" r="8" fill="#F42A41"/>
+  </g>
+  <path d="M68 20 L74 20 L71 16 Z M74 20 L80 20 L77 16 Z" fill="#ffffff" opacity="0.8"/>
+  <path d="M71 16 L77 16 L74 12 Z" fill="#F42A41" opacity="0.9"/>
 </svg>
