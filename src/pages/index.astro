@@ -130,24 +130,26 @@ const countries = [
 
         <!-- Search bar -->
         <div class="max-w-xl mx-auto mb-5">
-          <div class="flex items-center bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden pr-1.5 py-1.5 pl-4">
+          <form id="hero-search-form" action="/search" method="get" class="flex items-center bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden pr-1.5 py-1.5 pl-4">
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               id="hero-search-input"
+              name="q"
               type="text"
               placeholder="Search scholarships, countries, or fields..."
               class="flex-1 text-sm text-gray-700 placeholder-gray-400 bg-transparent outline-none py-1"
+              autocomplete="off"
             />
-            <a
-              href="/search"
+            <button
+              type="submit"
               id="hero-search-btn"
               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors flex-shrink-0"
             >
               Search
-            </a>
-          </div>
+            </button>
+          </form>
         </div>
 
         <!-- Popular tags -->
@@ -518,23 +520,17 @@ const countries = [
 <script define:vars={{ searchData }}>
   window.SEARCH_DATA = searchData;
 
+  const form = document.getElementById('hero-search-form');
   const input = document.getElementById('hero-search-input');
-  const btn = document.getElementById('hero-search-btn');
 
-  function navigateSearch() {
-    const q = input.value.trim();
-    if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
-    else window.location.href = '/search';
-  }
+  if (form && input) {
+    const formWrapper = form.parentElement;
+    formWrapper.style.position = 'relative';
 
-  if (input && btn) {
-    // Inject results dropdown container after the search box wrapper
-    const wrapper = input.closest('.flex');
     const resultsEl = document.createElement('div');
     resultsEl.id = 'hero-search-results';
     resultsEl.className = 'absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-200 divide-y divide-gray-100 max-h-96 overflow-y-auto hidden z-50';
-    wrapper.parentElement.style.position = 'relative';
-    wrapper.parentElement.appendChild(resultsEl);
+    formWrapper.appendChild(resultsEl);
 
     import('fuse.js').then(module => {
       const Fuse = module.default;
@@ -582,16 +578,13 @@ const countries = [
       });
 
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); navigateSearch(); }
         if (e.key === 'Escape') resultsEl.classList.add('hidden');
       });
 
       document.addEventListener('click', (e) => {
-        if (!wrapper.parentElement.contains(e.target)) resultsEl.classList.add('hidden');
+        if (!formWrapper.contains(e.target)) resultsEl.classList.add('hidden');
       });
     });
-
-    btn.addEventListener('click', (e) => { e.preventDefault(); navigateSearch(); });
   }
 </script>
 
