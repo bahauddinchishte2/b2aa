@@ -109,29 +109,29 @@ const countries = [
       </div>
     </div>
 
-    <div class="relative z-10 pt-16 pb-0">
-      <div class="max-w-3xl mx-auto text-center px-4 sm:px-6">
+    <div class="relative z-10 pt-20 pb-0">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6">
 
         <!-- Trust badge -->
-        <div class="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 mb-6 shadow-sm">
+        <div class="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 mb-7 shadow-sm">
           <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
           <span class="text-sm font-medium text-gray-600">Trusted by 10,000+ Students</span>
         </div>
 
-        <h1 class="hero-title text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
+        <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-5">
           <span class="block">Your Gateway to Global</span>
           <span class="block">Educational Opportunities</span>
         </h1>
-        <p class="text-base sm:text-lg text-gray-500 mb-8 max-w-xl mx-auto">
+        <p class="text-lg sm:text-xl text-gray-500 mb-9 max-w-2xl mx-auto leading-relaxed">
           Discover verified scholarships, fellowships, and internships from around the world. Start your journey today.
         </p>
 
         <!-- Search bar -->
-        <div class="max-w-xl mx-auto mb-5">
-          <form id="hero-search-form" action="/search" method="get" class="flex items-center bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden pr-1.5 py-1.5 pl-4">
-            <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="max-w-2xl mx-auto mb-6">
+          <form id="hero-search-form" action="/search" method="get" class="flex items-center bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden pr-1.5 py-1.5 pl-5">
+            <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -139,13 +139,13 @@ const countries = [
               name="q"
               type="text"
               placeholder="Search scholarships, countries, or fields..."
-              class="flex-1 text-sm text-gray-700 placeholder-gray-400 bg-transparent outline-none py-1"
+              class="flex-1 text-base text-gray-700 placeholder-gray-400 bg-transparent outline-none py-1.5"
               autocomplete="off"
             />
             <button
               type="submit"
               id="hero-search-btn"
-              class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors flex-shrink-0"
+              class="bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold px-6 py-3 rounded-lg transition-colors flex-shrink-0"
             >
               Search
             </button>
@@ -153,12 +153,12 @@ const countries = [
         </div>
 
         <!-- Popular tags -->
-        <div class="flex items-center justify-center flex-wrap gap-2 text-sm">
+        <div class="flex items-center justify-center flex-wrap gap-2.5 text-sm">
           <span class="text-gray-400 font-medium">Popular:</span>
           {['Germany', 'USA', 'UK', 'Fully Funded', 'Masters'].map(tag => (
             <a
               href={`/search?q=${encodeURIComponent(tag)}`}
-              class="px-3 py-1 bg-white border border-gray-200 rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors shadow-sm"
+              class="px-3.5 py-1.5 bg-white border border-gray-200 rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors shadow-sm"
             >
               {tag}
             </a>
@@ -176,9 +176,9 @@ const countries = [
   </section>
 
   <!-- ===== STATS BAR ===== -->
-  <section class="bg-white py-10 border-b border-gray-100">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+  <section class="bg-white py-14 border-b border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         {[
           { value: '500+', label: 'Active Opportunities' },
           { value: `${totalCountries > 10 ? totalCountries : 50}+`, label: 'Countries Covered' },
@@ -186,8 +186,8 @@ const countries = [
           { value: '100%', label: 'Verified Listings' },
         ].map(stat => (
           <div>
-            <div class="text-3xl sm:text-4xl font-bold text-blue-600">{stat.value}</div>
-            <div class="text-sm text-gray-500 mt-1">{stat.label}</div>
+            <div class="text-4xl sm:text-5xl font-bold text-blue-600">{stat.value}</div>
+            <div class="text-base text-gray-500 mt-2">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -195,10 +195,10 @@ const countries = [
   </section>
 
   <!-- ===== FEATURED SCHOLARSHIPS ===== -->
-  <section class="bg-white py-14 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Featured Scholarships</h2>
+  <section class="bg-white py-16 sm:py-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-10">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Featured Scholarships</h2>
         <a href="/scholarships/all" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1 transition-colors">
           View All
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +207,7 @@ const countries = [
         </a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {featuredScholarships.map((s) => {
           const img = scholarshipImages[s.slug] || defaultScholarshipImage;
           const fundingLabel = s.data.fundingType || 'Funded';
@@ -215,36 +215,36 @@ const countries = [
           const deadlineStr = s.data.deadline ? format(new Date(s.data.deadline), 'MMM d, yyyy') : '';
           return (
             <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
-              <div class="relative h-44 overflow-hidden">
+              <div class="relative h-48 overflow-hidden">
                 <img
                   src={img}
                   alt={s.data.title}
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   width="400"
-                  height="176"
+                  height="192"
                   loading="lazy"
                 />
               </div>
-              <div class="p-5">
+              <div class="p-6">
                 <div class="flex items-center gap-2 mb-3 flex-wrap">
-                  <span class={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getFundingBadgeStyle(fundingLabel)}`}>
+                  <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${getFundingBadgeStyle(fundingLabel)}`}>
                     {fundingLabel}
                   </span>
-                  <span class={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getLevelBadgeStyle(levelLabel)}`}>
+                  <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${getLevelBadgeStyle(levelLabel)}`}>
                     {levelLabel}
                   </span>
                 </div>
-                <h3 class="font-semibold text-gray-900 text-base mb-3 leading-snug">{s.data.title}</h3>
-                <div class="flex items-center gap-4 text-xs text-gray-500 mb-4">
-                  <span class="flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h3 class="font-semibold text-gray-900 text-lg mb-3 leading-snug">{s.data.title}</h3>
+                <div class="flex items-center gap-4 text-sm text-gray-500 mb-5">
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
                     {s.data.country}
                   </span>
                   {deadlineStr && (
-                    <span class="flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {deadlineStr}
@@ -253,7 +253,7 @@ const countries = [
                 </div>
                 <a
                   href={`/scholarships/${s.slug}`}
-                  class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
+                  class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
                 >
                   View Details
                 </a>
@@ -266,43 +266,43 @@ const countries = [
   </section>
 
   <!-- ===== HOW IT WORKS ===== -->
-  <section class="bg-gray-50 py-16 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">How It Works</h2>
-        <p class="text-gray-500 text-base">Start your journey to studying abroad in just 3 simple steps</p>
+  <section class="bg-gray-50 py-16 sm:py-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+        <p class="text-gray-500 text-lg max-w-xl mx-auto">Start your journey to studying abroad in just 3 simple steps</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           {
             num: '01',
-            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />`,
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />`,
             title: 'Explore Opportunities',
             desc: 'Browse through our curated list of 500+ verified scholarships, fellowships, and internships from around the world.',
           },
           {
             num: '02',
-            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />`,
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />`,
             title: 'Save and Track',
             desc: "Bookmark your favorite opportunities and track application deadlines with our smart notification system.",
           },
           {
             num: '03',
-            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6" />`,
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6" />`,
             title: 'Apply with Confidence',
             desc: 'Access free resources, country guides, and test prep materials to submit winning applications.',
           },
         ].map(step => (
-          <div class="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm">
-            <div class="flex items-center gap-3 mb-5">
-              <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={step.icon}></svg>
+          <div class="bg-white rounded-2xl p-8 sm:p-10 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={step.icon}></svg>
               </div>
-              <span class="text-2xl font-bold text-blue-100 leading-none">{step.num}</span>
+              <span class="text-3xl sm:text-4xl font-bold text-blue-100 leading-none">{step.num}</span>
             </div>
-            <h3 class="text-base font-semibold text-gray-900 mb-2">{step.title}</h3>
-            <p class="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
+            <p class="text-base text-gray-500 leading-relaxed">{step.desc}</p>
           </div>
         ))}
       </div>
@@ -310,10 +310,10 @@ const countries = [
   </section>
 
   <!-- ===== BROWSE BY COUNTRY ===== -->
-  <section class="bg-white py-14 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Browse by Country</h2>
+  <section class="bg-white py-16 sm:py-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-10">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Browse by Country</h2>
         <a href="/scholarships/all" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1 transition-colors">
           View All Countries
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,16 +322,16 @@ const countries = [
         </a>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5">
         {countries.map(c => (
           <a
             href={`/scholarships/all`}
-            class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:border-blue-300 hover:shadow-md transition-all group"
+            class="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:border-blue-300 hover:shadow-md transition-all group"
           >
-            <div class="text-4xl mb-3">{c.flag}</div>
-            <div class="text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors mb-1">{c.name}</div>
-            <div class="text-xs text-gray-400 mb-3">{c.count} Scholarships</div>
-            <div class="text-xs text-blue-600 border border-blue-200 rounded-full py-1 px-3 inline-block group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <div class="text-5xl mb-3">{c.flag}</div>
+            <div class="text-base font-semibold text-gray-800 group-hover:text-blue-600 transition-colors mb-1">{c.name}</div>
+            <div class="text-sm text-gray-400 mb-4">{c.count} Scholarships</div>
+            <div class="text-xs text-blue-600 border border-blue-200 rounded-full py-1.5 px-4 inline-block group-hover:bg-blue-600 group-hover:text-white transition-colors">
               Explore
             </div>
           </a>
@@ -341,14 +341,14 @@ const countries = [
   </section>
 
   <!-- ===== SUCCESS STORIES ===== -->
-  <section class="bg-gray-50 py-16 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="mb-10">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Success Stories from Our Scholars</h2>
-        <p class="text-gray-500 text-base">Real students who achieved their dreams through scholarships we helped them discover</p>
+  <section class="bg-gray-50 py-16 sm:py-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-12">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">Success Stories from Our Scholars</h2>
+        <p class="text-gray-500 text-lg">Real students who achieved their dreams through scholarships we helped them discover</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           {
             name: 'Rafiq Ahmed',
@@ -378,25 +378,25 @@ const countries = [
             badgeColor: 'bg-blue-400',
           },
         ].map(story => (
-          <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-            <div class="flex items-center gap-3 mb-4">
+          <div class="bg-white rounded-2xl p-7 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-4 mb-5">
               <img
                 src={story.avatar}
                 alt={story.name}
-                class="w-11 h-11 rounded-full object-cover flex-shrink-0"
-                width="44"
-                height="44"
+                class="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                width="48"
+                height="48"
                 loading="lazy"
               />
               <div class="flex-1 min-w-0">
-                <div class="font-semibold text-gray-900 text-sm">{story.name}</div>
+                <div class="font-semibold text-gray-900 text-base">{story.name}</div>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                  <span class={`text-xs text-white font-medium px-2 py-0.5 rounded-full ${story.badgeColor}`}>{story.scholarship}</span>
-                  <span class="text-xs text-gray-500 flex items-center gap-1">{story.destFlag} {story.destination}</span>
+                  <span class={`text-xs text-white font-medium px-2.5 py-0.5 rounded-full ${story.badgeColor}`}>{story.scholarship}</span>
+                  <span class="text-sm text-gray-500 flex items-center gap-1">{story.destFlag} {story.destination}</span>
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600 leading-relaxed italic">{story.quote}</p>
+            <p class="text-base text-gray-600 leading-relaxed italic">{story.quote}</p>
           </div>
         ))}
       </div>
@@ -404,13 +404,13 @@ const countries = [
   </section>
 
   <!-- ===== JOIN COMMUNITY ===== -->
-  <section class="bg-white py-14 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
+  <section class="bg-white py-16 sm:py-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
       <div class="bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden">
         <div class="flex flex-col lg:flex-row">
 
           <!-- Left: image with overlay -->
-          <div class="lg:w-5/12 relative min-h-[300px] lg:min-h-0">
+          <div class="lg:w-5/12 relative min-h-[320px] lg:min-h-0">
             <img
               src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800"
               alt="Students collaborating and discussing opportunities"
@@ -422,7 +422,7 @@ const countries = [
             <div class="absolute inset-0 bg-gray-900/55"></div>
             <div class="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
               <h3 class="text-2xl sm:text-3xl font-bold mb-3">Join Our Community</h3>
-              <p class="text-white/85 text-sm sm:text-base max-w-xs">
+              <p class="text-white/85 text-base max-w-xs">
                 Connect with 10,000+ students and alumni from Bangladesh studying abroad
               </p>
               <div class="flex items-center gap-2.5 mt-5">
@@ -435,10 +435,10 @@ const countries = [
           </div>
 
           <!-- Right: benefits + CTA -->
-          <div class="lg:w-7/12 p-8 sm:p-10 flex flex-col justify-center">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-7">Why Join Our Community?</h2>
+          <div class="lg:w-7/12 p-8 sm:p-12 flex flex-col justify-center">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Why Join Our Community?</h2>
 
-            <div class="space-y-6 mb-8">
+            <div class="space-y-7 mb-9">
               {[
                 {
                   icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />`,
@@ -457,12 +457,12 @@ const countries = [
                 },
               ].map(item => (
                 <div class="flex items-start gap-4">
-                  <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg class="w-4.5 h-4.5 text-blue-600 w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={item.icon}></svg>
+                  <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={item.icon}></svg>
                   </div>
                   <div>
-                    <div class="font-semibold text-gray-900 text-sm">{item.title}</div>
-                    <div class="text-sm text-gray-500 mt-0.5">{item.desc}</div>
+                    <div class="font-semibold text-gray-900 text-base">{item.title}</div>
+                    <div class="text-base text-gray-500 mt-1">{item.desc}</div>
                   </div>
                 </div>
               ))}
@@ -472,7 +472,7 @@ const countries = [
               href="https://www.facebook.com/groups/bangladeshtoabroad"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center justify-center gap-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
+              class="flex items-center justify-center gap-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base py-3.5 rounded-xl transition-colors"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -487,26 +487,26 @@ const countries = [
   </section>
 
   <!-- ===== CTA BANNER ===== -->
-  <section class="px-4 sm:px-6 py-14">
-    <div class="max-w-6xl mx-auto">
-      <div class="cta-gradient rounded-2xl px-8 py-12 sm:px-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden">
+  <section class="px-4 sm:px-6 py-16 sm:py-20">
+    <div class="max-w-7xl mx-auto">
+      <div class="cta-gradient rounded-2xl px-8 py-14 sm:px-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 relative overflow-hidden">
         <div class="cta-decoration absolute right-0 top-0 bottom-0 w-64 pointer-events-none"></div>
         <div class="relative z-10 max-w-lg">
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Ready to Start Your Journey?</h2>
-          <p class="text-blue-100 text-sm sm:text-base">
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3">Ready to Start Your Journey?</h2>
+          <p class="text-blue-100 text-base sm:text-lg">
             Join 10,000+ Bangladeshi students who found their dream scholarships through our platform.
           </p>
         </div>
-        <div class="relative z-10 flex items-center gap-3 flex-shrink-0">
+        <div class="relative z-10 flex items-center gap-4 flex-shrink-0">
           <a
             href="/scholarships/all"
-            class="bg-white text-blue-700 font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-blue-50 transition-colors shadow-sm"
+            class="bg-white text-blue-700 font-semibold text-base px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors shadow-sm"
           >
             Get Started Free
           </a>
           <a
             href="/about"
-            class="bg-transparent border border-white/50 text-white font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-white/10 transition-colors"
+            class="bg-transparent border border-white/50 text-white font-semibold text-base px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
           >
             Learn More
           </a>
@@ -604,7 +604,7 @@ const countries = [
 <style>
   .hero-section {
     background: linear-gradient(160deg, #dbeafe 0%, #eff6ff 40%, #e0f2fe 100%);
-    min-height: 560px;
+    min-height: 600px;
   }
 
   .hero-title span {
@@ -613,7 +613,10 @@ const countries = [
 
   @media (max-width: 480px) {
     .hero-title {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
+    }
+    .hero-title span {
+      white-space: normal;
     }
   }
 
