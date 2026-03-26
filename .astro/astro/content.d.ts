@@ -206,13 +206,6 @@ declare module 'astro:content' {
 } & { render(): Render[".mdx"] };
 };
 "scholarships": {
-"erasmus-mundus-scholarship-2024.mdx": {
-	id: "erasmus-mundus-scholarship-2024.mdx";
-  slug: "erasmus-mundus-scholarship-2024";
-  body: string;
-  collection: "scholarships";
-  data: InferEntrySchema<"scholarships">
-} & { render(): Render[".mdx"] };
 "oxford-university-scholarship-2024.mdx": {
 	id: "oxford-university-scholarship-2024.mdx";
   slug: "oxford-university-scholarship-2024";
