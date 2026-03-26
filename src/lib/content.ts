@@ -32,6 +32,7 @@ export interface NormalizedScholarship {
     category: 'government-scholarship' | 'university-scholarship';
     tags: string[];
     author: string;
+    heroImage?: string;
   };
   sanityBody?: any[];
   render?: () => Promise<{ Content: any }>;
@@ -54,6 +55,7 @@ export interface NormalizedOpportunity {
     category: 'internship' | 'fellowship';
     tags: string[];
     author: string;
+    heroImage?: string;
   };
   sanityBody?: any[];
   render?: () => Promise<{ Content: any }>;
@@ -109,6 +111,7 @@ function normalizeSanityScholarship(s: SanityScholarship): NormalizedScholarship
       category: s.category,
       tags: s.tags || [],
       author: s.author,
+      heroImage: getFeaturedImageUrl(s) || undefined,
     },
     sanityBody: s.body,
   };
@@ -132,6 +135,7 @@ function normalizeSanityOpportunity(o: SanityOpportunity): NormalizedOpportunity
       category: o.category,
       tags: o.tags || [],
       author: o.author,
+      heroImage: getFeaturedImageUrl(o) || undefined,
     },
     sanityBody: o.body,
   };
