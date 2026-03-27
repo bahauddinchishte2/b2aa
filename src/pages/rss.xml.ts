@@ -80,7 +80,7 @@ export const GET: APIRoute = async ({ site }) => {
 </rss>`,
     {
       headers: {
-        'Content-Type': 'application/xml',
+        'Content-Type': 'application/rss+xml; charset=utf-8',
       },
     }
   );

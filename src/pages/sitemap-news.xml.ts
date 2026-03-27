@@ -28,7 +28,6 @@ export const GET: APIRoute = async ({ site }) => {
           </news:publication>
           <news:publication_date>${pubDate.toISOString()}</news:publication_date>
           <news:title>${escapeXml(post.data.title)}</news:title>
-          <news:keywords>${post.data.tags?.join(', ') || 'education, study abroad'}</news:keywords>
         </news:news>
       </url>`);
     }
@@ -47,7 +46,6 @@ export const GET: APIRoute = async ({ site }) => {
           </news:publication>
           <news:publication_date>${pubDate.toISOString()}</news:publication_date>
           <news:title>${escapeXml(item.data.title)}</news:title>
-          <news:keywords>scholarship, ${item.data.country || ''}, ${item.data.fundingType || ''}, study abroad</news:keywords>
         </news:news>
       </url>`);
     }
@@ -66,7 +64,6 @@ export const GET: APIRoute = async ({ site }) => {
           </news:publication>
           <news:publication_date>${pubDate.toISOString()}</news:publication_date>
           <news:title>${escapeXml(item.data.title)}</news:title>
-          <news:keywords>${item.data.category || 'opportunity'}, ${item.data.country || ''}, study abroad, Bangladesh</news:keywords>
         </news:news>
       </url>`);
     }
@@ -74,10 +71,10 @@ export const GET: APIRoute = async ({ site }) => {
 
   return new Response(
     `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-            xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-      ${newsEntries.join('')}
-    </urlset>`,
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  ${newsEntries.join('')}
+</urlset>`,
     {
       headers: {
         'Content-Type': 'application/xml',
