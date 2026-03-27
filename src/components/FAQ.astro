@@ -1,0 +1,46 @@
+---
+const faqs = [
+  {
+    question: 'Is this platform free to use?',
+    answer: 'Yes! Bangladesh to Abroad is completely free for students. We believe everyone deserves access to global education opportunities.',
+  },
+  {
+    question: 'What types of opportunities do you list?',
+    answer: 'We list scholarships, fellowships, internships, research grants, and exchange programs from over 50 countries worldwide.',
+  },
+  {
+    question: 'How do you verify scholarships?',
+    answer: 'Our team manually verifies each scholarship by checking official university and organization websites before listing them on our platform.',
+  },
+  {
+    question: 'How do I get deadline reminders?',
+    answer: 'Create a free account and bookmark your favorite opportunities. We will send you email reminders before application deadlines.',
+  },
+  {
+    question: 'Can I get help with my applications?',
+    answer: 'Absolutely! Our community of successful scholars offers essay reviews, interview preparation, and mentorship to help you succeed.',
+  },
+  {
+    question: 'Are resources available in Bengali?',
+    answer: 'Yes! Many of our guides and resources are available in Bengali. We are continuously expanding our Bengali content library.',
+  },
+];
+---
+
+<section class="bg-white py-16 sm:py-20 px-4 sm:px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-lg">Got questions? We have answers</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {faqs.map(faq => (
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-7 hover:border-gray-300 transition-colors">
+          <h3 class="text-base font-semibold text-gray-900 mb-2">{faq.question}</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
