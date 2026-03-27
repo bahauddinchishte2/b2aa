@@ -42,7 +42,7 @@ export interface Props {
 const {
   title,
   description,
-  canonical = Astro.url.href,
+  canonical: canonicalProp,
   image = '/images/og-image.jpeg',
   type = 'website',
   contentType,
@@ -61,6 +61,17 @@ const {
 const siteName = 'Bangladesh to Abroad';
 const siteUrl = 'https://bangladesh2abroad.com';
 const locale = 'en_BD';
+
+function normalizeUrl(url: string): string {
+  const u = new URL(url, siteUrl);
+  let path = u.pathname.replace(/\/+$/, '') || '/';
+  path = path.replace(/\.html$/, '');
+  return `${siteUrl}${path}`;
+}
+
+const canonical = canonicalProp
+  ? normalizeUrl(canonicalProp)
+  : normalizeUrl(Astro.url.pathname);
 
 // Format dates for Schema.org
 const schemaPublishDate = publishDate ? new Date(publishDate).toISOString() : null;

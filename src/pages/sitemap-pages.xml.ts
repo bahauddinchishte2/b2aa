@@ -32,15 +32,16 @@ export const GET: APIRoute = async ({ site }) => {
   // Current date in W3C format (used for lastmod)
   const currentDate = new Date().toISOString();
 
-  // Generate sitemap entries for each page
-  const pages = staticPages.map(page => `
+  const pages = staticPages.map(page => {
+    const loc = page === '' ? baseUrl : `${baseUrl}/${page}`;
+    return `
     <url>
-      <loc>${baseUrl}/${page}</loc>
+      <loc>${loc}</loc>
       <lastmod>${currentDate}</lastmod>
       <changefreq>weekly</changefreq>
       <priority>${page === '' ? '1.0' : page.includes('current') ? '0.9' : '0.8'}</priority>
-    </url>
-  `).join('');
+    </url>`;
+  }).join('');
 
   return new Response(
     `<?xml version="1.0" encoding="UTF-8"?>
