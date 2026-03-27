@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DottedWorldMap from '../components/DottedWorldMap.astro';
+import FreeResources from '../components/FreeResources.astro';
+import FAQ from '../components/FAQ.astro';
 import { getAllScholarships, getAllOpportunities, getAllResources, getAllBlogPosts } from '../lib/content';
 import { format } from 'date-fns';
 
@@ -485,6 +487,12 @@ const countries = [
       </div>
     </div>
   </section>
+
+  <!-- ===== FREE RESOURCES ===== -->
+  <FreeResources />
+
+  <!-- ===== FAQ ===== -->
+  <FAQ />
 
   <!-- ===== CTA BANNER ===== -->
   <section class="px-4 sm:px-6 py-16 sm:py-20">

@@ -17,20 +17,19 @@ export const GET: APIRoute = async ({ site }) => {
     let priority = '0.7';
     
     return `
-      <url>
-        <loc>${baseUrl}/blog/${post.slug}</loc>
-        <lastmod>${lastmod}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>${priority}</priority>
-      </url>
-    `;
+  <url>
+    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
   }).join('');
 
   return new Response(
     `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      ${entries}
-    </urlset>`,
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${entries}
+</urlset>`,
     {
       headers: {
         'Content-Type': 'application/xml',
